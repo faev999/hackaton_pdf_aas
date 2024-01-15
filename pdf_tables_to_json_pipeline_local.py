@@ -13,8 +13,8 @@ def convert_pdf_to_html(pdf_path, html_path):
     subprocess.call(command, shell=True)
 
 
-input_pdf = "XS630B1.pdf"
-output_pdf = "XS630B1"
+input_pdf = "ur10e.pdf"
+output_pdf = input_pdf.replace(".pdf", "")
 
 convert_pdf_to_html(input_pdf, output_pdf)
 
@@ -58,7 +58,7 @@ client = OpenAI(base_url=f"http://{local_ip}:5000/v1", api_key="not-needed")
 print("Local client created")
 print("sending request")
 response = client.chat.completions.create(
-    model="gpt-4-1106-preview",
+    model="local-model",
     stream=True,
     temperature=0.0,
     messages=[
