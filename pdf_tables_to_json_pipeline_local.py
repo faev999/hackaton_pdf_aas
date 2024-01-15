@@ -14,7 +14,7 @@ def convert_pdf_to_html(pdf_path, html_path):
     subprocess.call(command, shell=True)
 
 
-input_pdf = "ur10e.pdf"
+input_pdf = "XS630B1.pdf"
 output_pdf = input_pdf.replace(".pdf", "")
 
 convert_pdf_to_html(input_pdf, output_pdf)
@@ -51,7 +51,7 @@ with open(f"{output_pdf}/processed_{output_pdf}.html", "w") as file:
         results = results + result_div
 
         # Write the result to the file
-        file.write(results + "\n")
+    file.write(results + "\n")
 
 local_ip = "172.31.48.1"
 client = OpenAI(base_url=f"http://{local_ip}:5000/v1", api_key="not-needed")
@@ -65,7 +65,7 @@ def num_tokens_from_string(string: str, encoding_name: str) -> int:
     return num_tokens
 
 
-print(num_tokens_from_string(results, openai_model))
+print("Number of tokens to send: ", num_tokens_from_string(result_div, openai_model))
 
 print("Local client created")
 print("sending request")
@@ -80,7 +80,7 @@ response = client.chat.completions.create(
         },
         {
             "role": "user",
-            "content": '"""\n' + results + '"""\n',
+            "content": '"""\n' + result_div + '"""\n',
         },
     ],
 )
