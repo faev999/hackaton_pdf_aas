@@ -16,6 +16,7 @@ from openai import OpenAI
 import json
 
 
+# Convert pdf to html
 def convert_pdf_to_html(pdf_path, html_path):
     command = f"pdf2htmlEX {pdf_path} --dest-dir {html_path} --font-size-multiplier 1 --zoom 25"
     subprocess.call(command, shell=True)
@@ -44,10 +45,11 @@ soup_without_head = soup.find("body")
 for img in soup_without_head.find_all("img"):
     img.decompose()
 
-# Convert  soup back to string
+# Convert  soup back to string so it can be used by the LLM
 result = str(soup_without_head)
 
 # Prettify soup without head
+# TODO: is this better than unprettified soup?
 prettified_soup_without_head = soup_without_head.prettify()
 
 
