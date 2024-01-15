@@ -31,7 +31,7 @@ div_elements = soup.find_all("div", attrs={"data-page-no": True})
 result = ""
 
 # Open the output file in write mode
-with open("result.html", "w") as file:
+with open(f"{output_pdf}/processed_{output_pdf}.html", "w") as file:
     # Loop over the div elements
     for div_element in div_elements:
         # Find and remove all img elements within the div
