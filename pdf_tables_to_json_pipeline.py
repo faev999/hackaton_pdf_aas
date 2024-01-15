@@ -1,16 +1,7 @@
 # Script that transforms pdfs to hmtl code and then cleans this code until only tables are left and then using gpt4 transforms this tables into json objects
 
 import subprocess
-from llama_index.retrievers import RecursiveRetriever
-from llama_index.query_engine import RetrieverQueryEngine
-from llama_index import VectorStoreIndex
-from llama_index.readers.file.flat_reader import FlatReader
-from pathlib import Path
 import os
-import pickle
-from llama_index.node_parser import (
-    UnstructuredElementNodeParser,
-)
 from bs4 import BeautifulSoup, NavigableString
 from openai import OpenAI
 import json
