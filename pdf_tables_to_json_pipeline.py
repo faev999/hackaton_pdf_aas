@@ -5,6 +5,7 @@ import os
 from bs4 import BeautifulSoup, NavigableString
 from openai import OpenAI
 import json
+import tiktoken
 
 
 # Convert pdf to html
@@ -42,6 +43,10 @@ with open(f"{output_pdf}/processed_{output_pdf}.html", "w") as file:
         for div in div_element.find_all("div"):
             if not div.find_all(string=lambda text: isinstance(text, NavigableString)):
                 div.decompose()
+            # Check if the div has a class style attribute
+            elif "class" in div.attrs:
+                # Remove the class attribute
+                del div.attrs["class"]
 
         # Convert the div element back to string
         result_div = str(div_element)
@@ -50,7 +55,7 @@ with open(f"{output_pdf}/processed_{output_pdf}.html", "w") as file:
         results = results + result_div
 
         # Write the result to the file
-        file.write(results + "\n")
+    file.write(results + "\n")
 
 client = OpenAI()
 
