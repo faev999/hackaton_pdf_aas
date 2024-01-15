@@ -52,7 +52,8 @@ with open(f"{output_pdf}/processed_{output_pdf}.html", "w") as file:
         # Write the result to the file
         file.write(results + "\n")
 
-client = OpenAI(base_url="http://localhost:1234/v1", api_key="not-needed")
+local_ip = "172.31.48.1"
+client = OpenAI(base_url=f"http://{local_ip}:5000/v1", api_key="not-needed")
 
 print("Local client created")
 print("sending request")
