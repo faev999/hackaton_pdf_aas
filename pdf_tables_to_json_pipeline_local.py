@@ -5,6 +5,7 @@ import os
 from bs4 import BeautifulSoup, NavigableString
 from openai import OpenAI
 import json
+import tiktoken
 
 
 # Convert pdf to html
@@ -54,6 +55,17 @@ with open(f"{output_pdf}/processed_{output_pdf}.html", "w") as file:
 
 local_ip = "172.31.48.1"
 client = OpenAI(base_url=f"http://{local_ip}:5000/v1", api_key="not-needed")
+
+openai_model = "gpt-4-1106-preview"
+
+
+def num_tokens_from_string(string: str, encoding_name: str) -> int:
+    encoding = tiktoken.encoding_for_model(encoding_name)
+    num_tokens = len(encoding.encode(string))
+    return num_tokens
+
+
+print(num_tokens_from_string(results, openai_model))
 
 print("Local client created")
 print("sending request")
