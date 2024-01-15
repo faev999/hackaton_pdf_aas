@@ -54,10 +54,20 @@ with open(f"{output_pdf}/processed_{output_pdf}.html", "w") as file:
 
 client = OpenAI()
 
+openai_model = "gpt-4-1106-preview"
+
+
+def num_tokens_from_string(string: str, encoding_name: str) -> int:
+    encoding = tiktoken.encoding_for_model(encoding_name)
+    num_tokens = len(encoding.encode(string))
+    return num_tokens
+
+
+print("Number of tokens to send: ", num_tokens_from_string(results, openai_model))
 print("OpenAI client created")
 print("sending request")
 response = client.chat.completions.create(
-    model="gpt-4-1106-preview",
+    model=openai_model,
     stream=True,
     messages=[
         {
