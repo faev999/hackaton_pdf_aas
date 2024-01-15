@@ -82,10 +82,10 @@ with open(f"{output_pdf}/processed_{output_pdf}.html", "w") as file:
         for div in div_element.find_all("div"):
             if not div.find_all(string=lambda text: isinstance(text, NavigableString)):
                 div.decompose()
-            # # Check if the div has a class attribute
-            # elif "class" in div.attrs:
-            #     # Remove the class attribute
-            #     del div.attrs["class"]
+            # Check if the div has a class attribute
+            elif "class" in div.attrs:
+                # Remove the class attribute
+                del div.attrs["class"]
 
         # Convert the div element back to string
         result_div_element = str(div_element)
@@ -96,7 +96,7 @@ with open(f"{output_pdf}/processed_{output_pdf}.html", "w") as file:
         # Write the result to the file
     file.write(results + "\n")
 
-run_inference(result_div_element)
+run_inference(results)
 
 # # Print whole result
 # print(response.choices[0].message.content)
