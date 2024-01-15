@@ -63,7 +63,7 @@ def process_html(output_html):
 
             # Write the result to the file
         file.write(results + "\n")
-        return results
+        return result_div
 
 
 def run_inference(query: str, llm_model: str):
@@ -87,16 +87,21 @@ def run_inference(query: str, llm_model: str):
             },
         ],
     )
-
+    complete_response = ""
     # Print stream
     print("Response:")
     for chunk in response:
         if chunk.choices[0].delta.content is not None:
             print(chunk.choices[0].delta.content, end="")
+            complete_response += chunk.choices[0].delta.content
+    return complete_response
 
 
 def save_json(response: str, output_html: str):
     """Verifies if response is valid JSON and saves it to json file"""
+
+    # Remove ```json and ``` from response
+    response = response.replace("```json", "").replace("```", "")
     try:
         json.loads(response)
     except ValueError:
@@ -108,28 +113,16 @@ def save_json(response: str, output_html: str):
 
 def main():
     input_pdf = "XS630B1.pdf"
-    output_html = "XS630B1"
+    output_name = "XS630B1"
 
-    convert_pdf_to_html(input_pdf, output_html)
+    convert_pdf_to_html(input_pdf, output_name)
 
-    processed_html = process_html(output_html)
+    processed_html = process_html(output_name)
 
     openai_model = "gpt-4-1106-preview"
-    run_inference(processed_html, openai_model)
+    response = run_inference(processed_html, openai_model)
 
-    # # Print whole result
-
-    # print(response.choices[0].message.content)
-
-    # # a JSON string
-    # json_string = response.choices[0].message.content
-
-    # # convert string to JSON
-    # json_obj = json.loads(json_string)
-
-    # # pretty print JSON
-    # pretty_json = json.dumps(json_obj, indent=4)
-    # print(pretty_json)
+    save_json(response, output_name)
 
 
 if __name__ == "__main__":
