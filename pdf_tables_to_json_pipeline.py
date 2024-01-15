@@ -25,54 +25,32 @@ with open(f"{output_pdf}/{output_pdf}.html", "r") as file:
 # Parse the HTML content
 soup = BeautifulSoup(html_content, "html.parser")
 
-# Prettify the HTML content
-prettified_html = soup.prettify()
+# Find all div elements with a "data-page-no" attribute
+div_elements = soup.find_all("div", attrs={"data-page-no": True})
 
-# Remove only head element from soup
-soup_without_head = soup.find("body")
+result = ""
 
-# Remove img elements
-for img in soup_without_head.find_all("img"):
-    img.decompose()
+# Open the output file in write mode
+with open("result.html", "w") as file:
+    # Loop over the div elements
+    for div_element in div_elements:
+        # Find and remove all img elements within the div
+        for img in div_element.find_all("img"):
+            img.decompose()
 
-# Convert  soup back to string so it can be used by the LLM
-result = str(soup_without_head)
+        # Find and remove all div elements that don't contain any text
+        for div in div_element.find_all("div"):
+            if not div.find_all(string=lambda text: isinstance(text, NavigableString)):
+                div.decompose()
 
-# Prettify soup without head
-# TODO: is this better than unprettified soup?
-prettified_soup_without_head = soup_without_head.prettify()
+        # Convert the div element back to string
+        result_div = str(div_element)
 
+        # Append the result to variable
+        result = result + result_div
 
-# Save to html file
-with open(f"{output_pdf}/no_img.html", "w") as file:
-    file.write(str(prettified_soup_without_head))
-
-# # Save the prettified HTML to a file
-# with open(f"{output_pdf}/prettified_html.html", "w") as file:
-#     file.write(prettified_html)
-
-
-# # Find all div elements with a "data-page-no" attribute
-# div_elements = soup.find_all("div", attrs={"data-page-no": True})
-
-# # Open the output file in write mode
-# with open("output3.html", "w") as file:
-#     # Loop over the div elements
-#     for div_element in div_elements:
-#         # Find and remove all img elements within the div
-#         for img in div_element.find_all("img"):
-#             img.decompose()
-
-#         # Find and remove all div elements that don't contain any text
-#         for div in div_element.find_all("div"):
-#             if not div.find_all(string=lambda text: isinstance(text, NavigableString)):
-#                 div.decompose()
-
-#         # Convert the div element back to string
-#         result = str(div_element)
-
-#         # Write the result to the file
-#         file.write(result + "\n")
+        # Write the result to the file
+        file.write(result + "\n")
 
 client = OpenAI()
 
