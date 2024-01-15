@@ -13,13 +13,12 @@ def convert_pdf_to_html(pdf_path, html_path):
     subprocess.call(command, shell=True)
 
 
-input_pdf = "XS630B1MAL2_document.pdf"
-output_pdf = "XS630B1MAL2_document"
+input_pdf = "XS630B1.pdf"
+output_pdf = "XS630B1"
 
 convert_pdf_to_html(input_pdf, output_pdf)
 
 # Open the HTML file and read its content
-
 with open(f"{output_pdf}/{output_pdf}.html", "r") as file:
     html_content = file.read()
 
