@@ -50,7 +50,7 @@ with open(f"{output_pdf}/processed_{output_pdf}.html", "w") as file:
         results = results + result_div
 
         # Write the result to the file
-        file.write(result + "\n")
+        file.write(results + "\n")
 
 client = OpenAI()
 
