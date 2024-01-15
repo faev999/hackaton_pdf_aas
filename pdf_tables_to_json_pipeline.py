@@ -28,7 +28,7 @@ soup = BeautifulSoup(html_content, "html.parser")
 # Find all div elements with a "data-page-no" attribute
 div_elements = soup.find_all("div", attrs={"data-page-no": True})
 
-result = ""
+results = ""
 
 # Open the output file in write mode
 with open(f"{output_pdf}/processed_{output_pdf}.html", "w") as file:
@@ -47,7 +47,7 @@ with open(f"{output_pdf}/processed_{output_pdf}.html", "w") as file:
         result_div = str(div_element)
 
         # Append the result to variable
-        result = result + result_div
+        results = result + result_div
 
         # Write the result to the file
         file.write(result + "\n")
@@ -58,6 +58,7 @@ print("OpenAI client created")
 print("sending request")
 response = client.chat.completions.create(
     model="gpt-4-1106-preview",
+    stream=True,
     messages=[
         {
             "role": "system",
@@ -65,11 +66,19 @@ response = client.chat.completions.create(
         },
         {
             "role": "user",
-            "content": '"""\n' + result + '"""\n',
+            "content": '"""\n' + results + '"""\n',
         },
     ],
 )
-print(response.choices[0].message.content)
+
+# Print stream
+for chunk in response:
+    if chunk.choices[0].delta.content is not None:
+        print(chunk.choices[0].delta.content, end="")
+
+# # Print whole result
+# print(response.choices[0].message.content)
+
 
 # # a JSON string
 # json_string = response.choices[0].message.content
