@@ -47,7 +47,7 @@ with open(f"{output_pdf}/processed_{output_pdf}.html", "w") as file:
         result_div = str(div_element)
 
         # Append the result to variable
-        results = result + result_div
+        results = results + result_div
 
         # Write the result to the file
         file.write(result + "\n")
