@@ -113,8 +113,7 @@ def save_json(response: str, output_path: str, file_name: str):
 
 
 def main():
-    # Create array of PDFs to be processed by reading contents of the folder "testing_pdfs" and getting their paths
-
+    # Get a list of all pdfs in the folder
     pdfs_folder_name = "pdfs_to_test"
     pdfs_to_test = []
 
@@ -127,12 +126,9 @@ def main():
     # Get a list of all files and folders in the specified folder
     contents = os.listdir(folder_path)
 
-    # Print the contents
     for item in contents:
         if item.endswith(".pdf"):
             pdfs_to_test.append(f"{folder_path}/{item}")
-
-    print(pdfs_to_test)
 
     openai_model = "gpt-4-1106-preview"
     # process each pdf
@@ -143,16 +139,14 @@ def main():
         start_time = time.time()
 
         convert_pdf_to_html(pdf, output_path)
-        whole_html, array_of_html = process_html(output_path, file_name)
+        whole_html, array_of_htmls = process_html(output_path, file_name)
 
         complete_response = ""
-        for html in array_of_html:
-            json_filename = file_name + "_page_" + str(array_of_html.index(html))
-            print(output_path)
-            individual_response = run_inference(html, openai_model)
-
+        for html_page in array_of_htmls:
+            json_filename = file_name + "_page_" + str(array_of_htmls.index(html_page))
+            individual_response = run_inference(html_page, openai_model)
             save_json(individual_response, output_path, json_filename)
-            # complete_response += individual_response
+            complete_response += individual_response
 
         end_time = time.time()
         running_time = end_time - start_time
