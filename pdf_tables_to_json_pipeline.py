@@ -73,7 +73,7 @@ def run_inference(query: str, llm_model: str):
         client = OpenAI(base_url=f"http://{local_ip}:5000/v1", api_key="not-needed")
     else:
         client = OpenAI()
-    print("OpenAI client created")
+    print("LLM client created")
     print(
         "Number of tokens to send: ",
         num_tokens_from_string(query, "gpt-4-1106-preview"),
@@ -106,7 +106,7 @@ def run_inference(query: str, llm_model: str):
 
 def save_inference_as_json(response: str, output_path: str, file_name: str):
     """Verifies if response is valid JSON and saves it to json file"""
-    print(output_path, " ", file_name)
+
     # Remove ```json and ``` from response
     response = response.replace("```json", "").replace("```", "")
     try:
@@ -120,7 +120,7 @@ def save_inference_as_json(response: str, output_path: str, file_name: str):
 
 def main():
     llm_model = "gpt-4-1106-preview"
-    llm_model = "local-model"
+    # llm_model = "local-model"
     # Get a list of all pdfs in the folder
     pdfs_folder_name = "pdfs_to_test"
     pdfs_to_test = []
@@ -152,43 +152,23 @@ def main():
         whole_html, array_of_htmls = preprocess_html(output_path, file_name)
         complete_response = ""
 
-        # Run inference for each html page
-        for html_page in array_of_htmls:
-            json_filename = file_name + "_page_" + str(array_of_htmls.index(html_page))
+        complete_response = run_inference(whole_html, llm_model)
+        save_inference_as_json(complete_response, output_path, f"{file_name}_whole")
 
-            # finds the tables in the html page and converts them to json
-            individual_response = run_inference(html_page, llm_model)
+        # # Run inference for each html page
+        # for html_page in array_of_htmls:
+        #     json_filename = file_name + "_page_" + str(array_of_htmls.index(html_page))
 
-            # save inference result as json
-            save_inference_as_json(individual_response, output_path, json_filename)
-            complete_response += individual_response
+        #     # finds the tables in the html page and converts them to json
+        #     individual_response = run_inference(html_page, llm_model)
+
+        #     # save inference result as json
+        #     save_inference_as_json(individual_response, output_path, json_filename)
+        #     complete_response += individual_response
 
         end_time = time.time()
         running_time = end_time - start_time
         print("Running time:", running_time, "seconds")
-
-    # input_pdf = "134132_eng.pdf"
-    # output_name = input_pdf.replace(".pdf", "")
-
-    # start_time = time.time()
-
-    # convert_pdf_to_html(input_pdf, output_name)
-
-    # whole_html, array_of_html = preprocess_html(output_name)
-
-    # llm_model = "gpt-4-1106-preview"
-
-    # # complete_response = ""
-    # # for html in array_of_html:
-    # #     individual_response = run_inference(html, llm_model)
-    # #     complete_response += individual_response
-
-    # complete_response = run_inference(whole_html, llm_model)
-    # # save_inference_as_json(complete_response, output_name)
-
-    # end_time = time.time()
-    # running_time = end_time - start_time
-    # print("Running time:", running_time, "seconds")
 
 
 if __name__ == "__main__":
