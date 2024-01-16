@@ -68,9 +68,16 @@ def preprocess_html(output_path, file_name):
 
 def run_inference(query: str, llm_model: str):
     """Sends query to openai and returns the response"""
-    client = OpenAI()
+    if llm_model == "local-model":
+        local_ip = "172.31.48.1"
+        client = OpenAI(base_url=f"http://{local_ip}:5000/v1", api_key="not-needed")
+    else:
+        client = OpenAI()
     print("OpenAI client created")
-    print("Number of tokens to send: ", num_tokens_from_string(query, llm_model))
+    print(
+        "Number of tokens to send: ",
+        num_tokens_from_string(query, "gpt-4-1106-preview"),
+    )
     print("sending request")
     response = client.chat.completions.create(
         model=llm_model,
@@ -113,6 +120,7 @@ def save_inference_as_json(response: str, output_path: str, file_name: str):
 
 def main():
     llm_model = "gpt-4-1106-preview"
+    llm_model = "local-model"
     # Get a list of all pdfs in the folder
     pdfs_folder_name = "pdfs_to_test"
     pdfs_to_test = []
