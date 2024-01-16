@@ -23,10 +23,10 @@ def convert_pdf_to_html(pdf_path, html_path):
     subprocess.call(command, shell=True)
 
 
-def process_html(output_html):
+def process_html(output_path, file_name):
     """Cleans HTML code from images, styles and other elements"""
     # Open the HTML file and read its content
-    with open(f"{output_html}/{output_html}.html", "r") as file:
+    with open(f"{output_path}/{file_name}.html", "r") as file:
         html_content = file.read()
 
     # Parse the HTML content
@@ -38,7 +38,7 @@ def process_html(output_html):
     complete_results = ""
     results_as_array = []
     # Open the output file in write mode
-    with open(f"{output_html}/processed_{output_html}.html", "w") as file:
+    with open(f"{output_path}/processed_{file_name}.html", "w") as file:
         # Loop over the div elements
         for div_element in div_elements:
             # Find and remove all img elements within the div
@@ -98,9 +98,9 @@ def run_inference(query: str, llm_model: str):
     return complete_response
 
 
-def save_json(response: str, output_path: str):
+def save_json(response: str, output_path: str, file_name: str):
     """Verifies if response is valid JSON and saves it to json file"""
-
+    print(output_path, " ", file_name)
     # Remove ```json and ``` from response
     response = response.replace("```json", "").replace("```", "")
     try:
@@ -108,53 +108,51 @@ def save_json(response: str, output_path: str):
     except ValueError:
         print("Response is not valid JSON")
     else:
-        with open(output_path, "w") as file:
+        with open(f"{output_path}/{file_name}.json", "w") as file:
             file.write(response)
 
 
 def main():
     # Create array of PDFs to be processed by reading contents of the folder "testing_pdfs" and getting their paths
 
-    folder = "pdfs_to_test"
-    # # Specify the folder
-    pdfs_to_test = [f"{folder}/Datasheet_BCS0037_270030_en.pdf"]
+    pdfs_folder_name = "pdfs_to_test"
+    pdfs_to_test = []
 
-    # # Get the current working directory
-    # current_directory = os.getcwd()
+    # Get the current working directory
+    current_directory = os.getcwd()
 
-    # # Create the full path to the folder
-    # folder_path = os.path.join(current_directory, folder)
+    # Create the full path to the folder
+    folder_path = os.path.join(current_directory, pdfs_folder_name)
 
-    # # Get a list of all files and folders in the specified folder
-    # contents = os.listdir(folder_path)
+    # Get a list of all files and folders in the specified folder
+    contents = os.listdir(folder_path)
 
-    # # Print the contents
-    # for item in contents:
-    #     if item.endswith(".pdf"):
-    #         pdfs_to_test.append(item)
-    #         print(item)
+    # Print the contents
+    for item in contents:
+        if item.endswith(".pdf"):
+            pdfs_to_test.append(item)
+            print(item)
 
     print(pdfs_to_test)
 
     openai_model = "gpt-4-1106-preview"
     # process each pdf
     for pdf in pdfs_to_test:
-        output_name = pdf.replace(".pdf", "")
+        # Split file name from path by removing everything behind the last "/"
+        file_name = pdf.split("/")[-1].replace(".pdf", "")
+        output_path = pdf.replace(".pdf", "")
         start_time = time.time()
 
-        convert_pdf_to_html(pdf, output_name)
-
-        whole_html, array_of_html = process_html(output_name)
+        convert_pdf_to_html(pdf, output_path)
+        whole_html, array_of_html = process_html(output_path, file_name)
 
         complete_response = ""
         for html in array_of_html:
-            output_path = (
-                f"{output_name}/{output_name}_page_{array_of_html.index(html)}.json"
-            )
+            json_filename = file_name + "_page_" + str(array_of_html.index(html))
             print(output_path)
             individual_response = run_inference(html, openai_model)
 
-            save_json(individual_response, output_path)
+            save_json(individual_response, output_path, json_filename)
             # complete_response += individual_response
 
         end_time = time.time()
