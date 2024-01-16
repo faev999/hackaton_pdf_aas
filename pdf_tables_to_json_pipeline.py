@@ -130,8 +130,7 @@ def main():
     # Print the contents
     for item in contents:
         if item.endswith(".pdf"):
-            pdfs_to_test.append(item)
-            print(item)
+            pdfs_to_test.append(f"{folder_path}/{item}")
 
     print(pdfs_to_test)
 
