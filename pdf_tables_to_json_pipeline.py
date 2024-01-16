@@ -112,7 +112,7 @@ def save_inference_as_json(response: str, output_path: str, file_name: str):
 
 
 def main():
-    openai_model = "gpt-4-1106-preview"
+    llm_model = "gpt-4-1106-preview"
     # Get a list of all pdfs in the folder
     pdfs_folder_name = "pdfs_to_test"
     pdfs_to_test = []
@@ -149,7 +149,7 @@ def main():
             json_filename = file_name + "_page_" + str(array_of_htmls.index(html_page))
 
             # finds the tables in the html page and converts them to json
-            individual_response = run_inference(html_page, openai_model)
+            individual_response = run_inference(html_page, llm_model)
 
             # save inference result as json
             save_inference_as_json(individual_response, output_path, json_filename)
@@ -168,14 +168,14 @@ def main():
 
     # whole_html, array_of_html = preprocess_html(output_name)
 
-    # openai_model = "gpt-4-1106-preview"
+    # llm_model = "gpt-4-1106-preview"
 
     # # complete_response = ""
     # # for html in array_of_html:
-    # #     individual_response = run_inference(html, openai_model)
+    # #     individual_response = run_inference(html, llm_model)
     # #     complete_response += individual_response
 
-    # complete_response = run_inference(whole_html, openai_model)
+    # complete_response = run_inference(whole_html, llm_model)
     # # save_inference_as_json(complete_response, output_name)
 
     # end_time = time.time()
