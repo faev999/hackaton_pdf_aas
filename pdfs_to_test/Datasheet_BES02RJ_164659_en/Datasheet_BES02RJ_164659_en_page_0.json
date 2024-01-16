@@ -1,0 +1,68 @@
+
+[
+  {
+    "Inductive Sensors": "BES 516-300-S135-D-PU-10",
+    "Order Code": "BES02RJ",
+    "Internet": "www.balluff.com",
+    "eCl@ss 9.1": "27-27-01-01",
+    "Subject to change without notice": "164659",
+    "ETIM 6.0": "EC002714",
+    "Document Number": "BES02RJ_0.94_2023-09-29",
+    "Page": "1 / 2",
+    "Note": "1) O-Ring with thrust ring"
+  },
+  {
+    "Basic features": {
+      "Approval/Conformity": ["CE", "UKCA", "cULus", "WEEE"],
+      "Basic standard": "IEC 60947-5-2",
+      "Display/Operation": {
+        "Function indicator": "no",
+        "Power indicator": "no"
+      },
+      "Electrical connection": {
+        "Cable diameter D": "3.50 mm",
+        "Cable length L": "10 m",
+        "Conductor cross-section": "0.14 mm²",
+        "Connection type": "Cable, 10.00 m, PUR",
+        "Number of conductors": "3",
+        "Polarity reversal protected": "yes",
+        "Protection against device mix-ups": "yes",
+        "Short-circuit protection": "yes"
+      }
+    }
+  },
+  {
+    "Electrical data": {
+      "Load capacitance max. at Ue": "0.5 µF",
+      "Min. operating current Im": "0 mA",
+      "No-load current Io max., damped": "10 mA",
+      "No-load current Io max., undamped": "1 mA",
+      "Operating voltage Ub": "10...30 VDC",
+      "Output resistance Ra": "33.0 kOhm + D",
+      "Rated insulation voltage Ui": "75 V DC",
+      "Rated operating current Ie": "200 mA",
+      "Rated operating voltage Ue DC": "24 V",
+      "Rated short circuit current": "100 A",
+      "Ready delay tv max.": "10 ms",
+      "Residual current Ir max.": "10 µA",
+      "Ripple max. (% of Ue)": "15 %",
+      "Switching frequency": "1000 Hz",
+      "Utilization category": "DC -13",
+      "Voltage drop static max.": "2.3 V"
+    }
+  },
+  {
+    "Environmental conditions": {
+      "Ambient temperature": "-25...80 °C",
+      "Contamination scale": "3",
+      "EN 60068-2-27, Shock": "Half-sinus, 30 g, 11 ms",
+      "EN 60068-2-6, Vibration": "55 Hz, amplitude 1 mm, 3x30 min",
+      "IP rating": "IP68"
+    }
+  },
+  {
+    "Functional safety": {
+      "MTTF (40 °C)": "720 a"
+    }
+  }
+]

@@ -23,7 +23,7 @@ def convert_pdf_to_html(pdf_path, html_path):
     subprocess.call(command, shell=True)
 
 
-def process_html(output_path, file_name):
+def preprocess_html(output_path, file_name):
     """Cleans HTML code from images, styles and other elements"""
     # Open the HTML file and read its content
     with open(f"{output_path}/{file_name}.html", "r") as file:
@@ -98,7 +98,7 @@ def run_inference(query: str, llm_model: str):
     return complete_response
 
 
-def save_json(response: str, output_path: str, file_name: str):
+def save_inference_as_json(response: str, output_path: str, file_name: str):
     """Verifies if response is valid JSON and saves it to json file"""
     print(output_path, " ", file_name)
     # Remove ```json and ``` from response
@@ -113,6 +113,7 @@ def save_json(response: str, output_path: str, file_name: str):
 
 
 def main():
+    openai_model = "gpt-4-1106-preview"
     # Get a list of all pdfs in the folder
     pdfs_folder_name = "pdfs_to_test"
     pdfs_to_test = []
@@ -130,22 +131,29 @@ def main():
         if item.endswith(".pdf"):
             pdfs_to_test.append(f"{folder_path}/{item}")
 
-    openai_model = "gpt-4-1106-preview"
+    start_time = time.time()
     # process each pdf
     for pdf in pdfs_to_test:
         # Split file name from path by removing everything behind the last "/"
         file_name = pdf.split("/")[-1].replace(".pdf", "")
         output_path = pdf.replace(".pdf", "")
-        start_time = time.time()
 
+        # Convert pdf to html and writes to disk
         convert_pdf_to_html(pdf, output_path)
-        whole_html, array_of_htmls = process_html(output_path, file_name)
 
+        # get whole html and array of htmls preprocessed
+        whole_html, array_of_htmls = preprocess_html(output_path, file_name)
         complete_response = ""
+
+        # Run inference for each html page
         for html_page in array_of_htmls:
             json_filename = file_name + "_page_" + str(array_of_htmls.index(html_page))
+
+            # finds the tables in the html page and converts them to json
             individual_response = run_inference(html_page, openai_model)
-            save_json(individual_response, output_path, json_filename)
+
+            # save inference result as json
+            save_inference_as_json(individual_response, output_path, json_filename)
             complete_response += individual_response
 
         end_time = time.time()
@@ -159,7 +167,7 @@ def main():
 
     # convert_pdf_to_html(input_pdf, output_name)
 
-    # whole_html, array_of_html = process_html(output_name)
+    # whole_html, array_of_html = preprocess_html(output_name)
 
     # openai_model = "gpt-4-1106-preview"
 
@@ -169,7 +177,7 @@ def main():
     # #     complete_response += individual_response
 
     # complete_response = run_inference(whole_html, openai_model)
-    # # save_json(complete_response, output_name)
+    # # save_inference_as_json(complete_response, output_name)
 
     # end_time = time.time()
     # running_time = end_time - start_time

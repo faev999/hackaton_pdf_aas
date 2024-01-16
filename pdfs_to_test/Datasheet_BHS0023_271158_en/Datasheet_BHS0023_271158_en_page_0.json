@@ -1,0 +1,62 @@
+
+[
+  {
+    "Inductive Sensors": "BES 516-300-S164-S4-D",
+    "Order Code": "BHS0023",
+    "Website": "www.balluff.com",
+    "eCl@ss 9.1": "27-27-01-01",
+    "Subject to change without notice": "271158 ETIM 6.0: EC002714",
+    "Document Number": "BHS0023_0.71_2023-09-29",
+    "Page": "1 / 2",
+    "Note": "1) O-Ring with thrust ring"
+  },
+  {
+    "Basic features": {
+      "Approval/Conformity": ["cULus", "CE", "UKCA", "WEEE"],
+      "Base type deviation": "Housing length",
+      "Basic standard": "IEC 60947-5-2",
+      "Display/Operation": {
+        "Function indicator": "no",
+        "Power indicator": "no"
+      },
+      "Electrical connection": {
+        "Connection": "M12x1-Male, 4-pin, A-coded",
+        "Polarity reversal protected": "yes",
+        "Protection against device mix-ups": "yes",
+        "Short-circuit protection": "yes"
+      }
+    }
+  },
+  {
+    "Electrical data": {
+      "Load capacitance max. at Ue": "0.5 µF",
+      "Min. operating current Im": "0 mA",
+      "No-load current Io max., damped": "10 mA",
+      "No-load current Io max., undamped": "1 mA",
+      "Operating voltage Ub": "10...30 VDC",
+      "Output resistance Ra": "33.0 kOhm + D",
+      "Rated insulation voltage Ui": "75 V DC",
+      "Rated operating current Ie": "200 mA",
+      "Rated operating voltage Ue DC": "24 V",
+      "Rated short circuit current": "100 A",
+      "Ready delay tv max.": "10 ms",
+      "Residual current Ir max.": "10 µA",
+      "Ripple max. (% of Ue)": "15 %",
+      "Switching frequency": "1000 Hz",
+      "Utilization category": "DC -13",
+      "Voltage drop static max.": "1.5 V"
+    }
+  },
+  {
+    "Environmental conditions": {
+      "Ambient temperature": "-25...80 °C",
+      "Contamination scale": "3",
+      "EN 60068-2-27, Shock": "Half-sinus, 30 g, 11 ms",
+      "EN 60068-2-6, Vibration": "55 Hz, amplitude 1 mm, 3x30 min",
+      "IP rating": "IP68"
+    },
+    "Functional safety": {
+      "MTTF (40 °C)": "720 a"
+    }
+  }
+]

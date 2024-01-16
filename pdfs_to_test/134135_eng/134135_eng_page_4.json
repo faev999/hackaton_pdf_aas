@@ -1,0 +1,74 @@
+
+[
+  {
+    "Release date": "2023-04-04",
+    "Date of issue": "2023-04-04",
+    "Filename": "134135_eng.pdf"
+  },
+  {
+    "Product Code": "RLK28-8-H-700-RT-Z/31/116"
+  },
+  {
+    "Contact Germany": "+49 621 776 1111",
+    "Company": "Pepperl+Fuchs Group"
+  },
+  {
+    "Reference": "Refer to \"General Notes Relating to Pepperl+Fuchs Product Information\"."
+  },
+  {
+    "Contact USA": "+1 330 486 0001",
+    "Contact Singapore": "+65 6779 9091",
+    "Website": "www.pepperl-fuchs.com",
+    "Email USA": "fa-info@us.pepperl-fuchs.com",
+    "Email Singapore": "fa-info@sg.pepperl-fuchs.com"
+  },
+  {
+    "Email Germany": "fa-info@de.pepperl-fuchs.com"
+  },
+  {
+    "Feature": "Background suppression sensor"
+  },
+  {
+    "Feature": "Timer functions"
+  },
+  {
+    "Timer Type": "-Z",
+    "Description": "OFF delay timer",
+    "Notes": "Adjustable time interval (0.1 s - 10 s)"
+  },
+  {
+    "Timer Type": "one shot timer"
+  },
+  {
+    "Timer Type": "ON delay timer"
+  },
+  {
+    "Timer Type": "ON delay timer / OFF delay timer"
+  },
+  {
+    "Timer Type": "ON delay timer / one shot timer"
+  },
+  {
+    "Timer Function": "Without"
+  },
+  {
+    "Switching Type": "Receiver exposed"
+  },
+  {
+    "Switching Type": "Receiver dark"
+  },
+  {
+    "Switching Type": "ON delay",
+    "Switching Condition": "Dark"
+  },
+  {
+    "Switching Type": "one shot",
+    "Switching Condition": "Light"
+  },
+  {
+    "Note": "Time t, ON, OFF, and OS are adjustable from 0.1 to 10 seconds."
+  },
+  {
+    "Note": "The Light-/Dark-Switch (Left, outer switch) is shown in the \"Dark ON\" position."
+  }
+]

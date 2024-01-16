@@ -1,0 +1,83 @@
+
+[
+  {
+    "Technical Data": {
+      "General specifications": {
+        "Detection range": "20 ... 2000 mm",
+        "Detection range min.": "20 ... 200 mm",
+        "Detection range max.": "20 ... 2000 mm",
+        "Adjustment range": "200 ... 2000 mm",
+        "Background suppression": "max. + 10 % of the upper limit of the detection range",
+        "Light source": "IRED",
+        "Light type": "modulated infrared light , 880 nm",
+        "Black-white difference (6 %/90 %)": "< 40  %",
+        "Diameter of the light spot": "approx. 70 mm at a distance of 2000 mm",
+        "Opening angle": {
+          "transmitter": "2°",
+          "receiver": "2°"
+        },
+        "Ambient light limit": "50000 Lux"
+      },
+      "Functional safety related parameters": {
+        "MTTFd": "620 a",
+        "Mission Time (TM)": "20 a",
+        "Diagnostic Coverage (DC)": "0 %"
+      },
+      "Indicators/operating means": {
+        "Operation indicator": "LED green",
+        "Function indicator": "2 LEDs yellow",
+        "ON": "object inside the scanning range",
+        "OFF": "object outside the scanning range",
+        "Control elements": "Sensing range adjuster , Light-on/dark-on changeover switch"
+      },
+      "Electrical specifications": {
+        "Operating voltage UB": "12 ... 240 V AC/DC",
+        "Power consumption P0": "≤ 3.5 VA",
+        "Output": {
+          "Switching type": "light/dark on, switchable",
+          "Signal output": "Relay, 1 alternator",
+          "Switching voltage": "max. 250 V AC/DC",
+          "Switching current": "max. 2 A",
+          "Switching power": "DC: max. 50 W AC: max. 500 VA",
+          "Switching frequency f": "25 Hz",
+          "Response time": "20 ms",
+          "Timer function": "ON delay (GAN), OFF delay (GAB), one shot (IAB), ON delay-one shot (GAN-IAB), ON delay-OFF delay (GAN-GAB), programmable adjustment interval 0.1 ... 10 s"
+        }
+      },
+      "Conformity": {
+        "Product standard": "EN 60947-5-2"
+      },
+      "Approvals and certificates": {
+        "Protection class": "II, rated insulation voltage ≤ 250 V AC with pollution degree 1-2 according to IEC 60664-1 Output circuit insulated from control circuit in accordance with IEC 61140.",
+        "Caution": "The protection class 2 is only valid when the terminal compartment is closed.",
+        "UL approval": "E87056 , cULus Listed Caution: This equipment is considered as open-type equipment. It must be mounted within an enclosure, that is suitably designed for protection against internal fire and personal injury resulting from accessibility to live parts according UL 508.",
+        "CCC approval": "Certified by China Compulsory Certification (CCC)"
+      },
+      "Ambient conditions": {
+        "Ambient temperature": "-40 ... 60 °C (-40 ... 140 °F)",
+        "Storage temperature": "-40 ... 60 °C (-40 ... 140 °F)"
+      },
+      "Mechanical specifications": {
+        "Housing width": "25.8 mm",
+        "Housing height": "88 mm",
+        "Housing depth": "65.5 mm",
+        "Background suppression sensor": "RLK28-8-H-2000-IR-Z/31/116"
+      },
+      "Release date": "2023-04-04",
+      "Date of issue": "2023-04-04",
+      "Filename": "134133_eng.pdf"
+    },
+    "Contact Information": {
+      "Germany": "+49 621 776 1111",
+      "USA": "+1 330 486 0001",
+      "Singapore": "+65 6779 9091",
+      "Website": "www.pepperl-fuchs.com",
+      "Email": {
+        "USA": "fa-info@us.pepperl-fuchs.com",
+        "Singapore": "fa-info@sg.pepperl-fuchs.com",
+        "Germany": "fa-info@de.pepperl-fuchs.com"
+      }
+    },
+    "Note": "Refer to 'General Notes Relating to Pepperl+Fuchs Product Information'."
+  }
+]

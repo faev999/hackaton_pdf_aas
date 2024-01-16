@@ -1,0 +1,66 @@
+
+[
+  {
+    "Release date": "2023-04-04",
+    "Date of issue": "2023-04-04",
+    "Filename": "134133_eng.pdf"
+  },
+  {
+    "Product Code": "RLK28-8-H-2000-IR-Z/31/116"
+  },
+  {
+    "Germany": "+49 621 776 1111",
+    "Company": "Pepperl+Fuchs Group",
+    "USA": "+1 330 486 0001",
+    "Singapore": "+65 6779 9091",
+    "Website": "www.pepperl-fuchs.com",
+    "Email USA": "fa-info@us.pepperl-fuchs.com",
+    "Email Singapore": "fa-info@sg.pepperl-fuchs.com",
+    "Email Germany": "fa-info@de.pepperl-fuchs.com"
+  },
+  {
+    "Product Feature": "Background suppression sensor"
+  },
+  {
+    "Product Feature": "Timer functions"
+  },
+  {
+    "Type": "-Z",
+    "Description": "OFF delay timer",
+    "Notes": "Adjustable time interval (0.1 s - 10 s)"
+  },
+  {
+    "Type": "one shot timer"
+  },
+  {
+    "Type": "ON delay timer"
+  },
+  {
+    "Type": "ON delay timer / OFF delay timer"
+  },
+  {
+    "Type": "ON delay timer / one shot timer"
+  },
+  {
+    "Timer function": "Without",
+    "Switching type": "Receiver exposed"
+  },
+  {
+    "Timer function": "OFF delay",
+    "Switching type": "Receiver dark"
+  },
+  {
+    "Timer function": "ON delay",
+    "Switching type": "Dark"
+  },
+  {
+    "Timer function": "one shot",
+    "Switching type": "Light"
+  },
+  {
+    "Note": "Time t, ON, OFF, and OS are adjustable from 0.1 to 10 seconds."
+  },
+  {
+    "Note": "The Light-/Dark-Switch (Left, outer switch) is shown in the 'Dark ON' position."
+  }
+]

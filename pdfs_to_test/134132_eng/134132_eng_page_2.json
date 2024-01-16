@@ -1,0 +1,58 @@
+
+[
+  {
+    "Technical Data": {
+      "Degree of protection": "IP67",
+      "Connection": "terminal compartment with 8 spring-loaded terminals for wire cross section 0.5 ... 1.5 mm², insulation stripping 7.5 ... 8.5 mm, M16 x 1.5 cable gland",
+      "Material": {
+        "Housing": "Plastic ABS",
+        "Optical face": "Plastic pane",
+        "Mass": "112 g"
+      }
+    }
+  },
+  {
+    "Connection Assignment": {
+      "NO": "8 (BK)",
+      "NC": "7 (WH)",
+      "C": ["6 (GY)", "5 (GY)"],
+      "~/0 V": "4 (BU)",
+      "~/+UB": "3 (BU)",
+      "Option:": "12V ... 240 V AC/DC"
+    },
+    "Note": "The relay-functions 'NC' and 'NO' bear on the switching mode 'Light-ON'. This complies to the default setting of the light/dark switch, located on top of the housing (factory setting)."
+  },
+  {
+    "Characteristic Curve": {
+      "RL(K)28-8-H-400-RT": {
+        "Offset Y [mm]": ["-6", "-4", "-2", "0", "2", "4", "6"],
+        "Distance X [mm]": ["0", "100", "200", "300", "400", "500"],
+        "Characteristic response curve": {
+          "white 90 %": null,
+          "grey 18 %": null,
+          "black 6 %": null
+        }
+      }
+    }
+  },
+  {
+    "Background suppression sensor": "RLK28-8-H-400-RT-Z/31/116",
+    "Release date": "2023-04-04",
+    "Date of issue": "2023-04-04",
+    "Filename": "134132_eng.pdf"
+  },
+  {
+    "Contact Information": {
+      "Germany": "+49 621 776 1111",
+      "USA": "+1 330 486 0001",
+      "Singapore": "+65 6779 9091",
+      "Website": "www.pepperl-fuchs.com",
+      "Emails": {
+        "USA": "fa-info@us.pepperl-fuchs.com",
+        "Singapore": "fa-info@sg.pepperl-fuchs.com",
+        "Germany": "fa-info@de.pepperl-fuchs.com"
+      }
+    },
+    "Reference": "Refer to 'General Notes Relating to Pepperl+Fuchs Product Information'."
+  }
+]

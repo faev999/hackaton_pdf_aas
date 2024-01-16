@@ -1,0 +1,57 @@
+
+[
+  {
+    "Inductive Sensors": "BES 516-300-S135-D-PU-10",
+    "Order Code": "BES02RJ",
+    "Internet": "www.balluff.com",
+    "eCl@ss 9.1": "27-27-01-01",
+    "Subject to change without notice": "164659",
+    "ETIM 6.0": "EC002714",
+    "Document Number": "BES02RJ_0.94_2023-09-29",
+    "Page": "2 / 2"
+  },
+  {
+    "Interface": {
+      "Switching output": "PNP normally open (NO)"
+    },
+    "Material": {
+      "Housing material": "1.4104 stainless steel",
+      "Material jacket": "PUR",
+      "Material sensing surface": "EP",
+      "Support ring material": "PTFE"
+    }
+  },
+  {
+    "Mechanical data": {
+      "Dimension": "Ø 12 x 61 mm",
+      "Installation": "for flush mounting",
+      "Mounting part": "M12x1",
+      "Pressure rating max.": "500 bar",
+      "Pressure rating, note": "oil pressure rated",
+      "Sealing ring, size": "5.85 × 2.4 mm",
+      "Size": "M12x1",
+      "Tightening torque": "25 Nm ±10 %"
+    }
+  },
+  {
+    "Range/Distance": {
+      "Assured operating distance Sa": "1.2 mm",
+      "Hysteresis H max. (% of Sr)": "15.0 %",
+      "Rated operating distance Sn": "1.5 mm",
+      "Real switching distance sr": "1.5 mm",
+      "Repeat accuracy max. (% of Sr)": "5.0 %",
+      "Temperature drift max. (% of Sr)": "10 %",
+      "Tolerance Sr": "±10 %"
+    }
+  },
+  {
+    "Remarks": [
+      "Installation Instructions 614804",
+      "Pressure rated also for O2, N2O, N2, air.",
+      "The sensor is functional again after the overload has been eliminated.",
+      "For more information about MTTF and B10d see MTTF / B10d Certificate",
+      "Indication of the MTTF- / B10d value does not represent a binding composition and/or life expectancy assurance; these are simply experiential values with no warranty implications. These declared values also do not extend the expiration period for defect claims or affect it in any way.",
+      "Wiring Diagrams"
+    ]
+  }
+]
