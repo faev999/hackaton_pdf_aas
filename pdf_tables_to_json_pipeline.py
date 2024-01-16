@@ -22,7 +22,7 @@
 
 # Script that transforms pdfs to html code, then cleans this code of style components, and then using gpt4 transforms this code into json objects that represent tables in the pdf.
 
-# Author: Fabio Espinosa, fabio.espinosa@dfki.de
+# Author: Fabio Espinosa, fabio.espinosa(at)dfki.de
 
 import subprocess
 import time
