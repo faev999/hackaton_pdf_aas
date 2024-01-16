@@ -1,11 +1,10 @@
-# Script that transforms pdfs to hmtl code and then cleans this code until only tables are left and then using gpt4 transforms this tables into json objects
+# Script that transforms pdfs to html code, then cleans this code of style components, and then using gpt4 transforms this code into json objects that represent tables in the pdf.
 
 import subprocess
 import time
 from bs4 import BeautifulSoup, NavigableString
 from openai import OpenAI
 import json
-import pandas as pd
 import tiktoken
 import os
 
