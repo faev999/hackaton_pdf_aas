@@ -36,14 +36,13 @@ import os
 def num_tokens_from_string(string: str, model_name: str) -> int:
     """Calculate number of tokens in a string depending on the model"""
     encoding = tiktoken.encoding_for_model(model_name)
-    num_tokens = len(encoding.encode(string))
-    return num_tokens
+    return len(encoding.encode(string))
 
 
 def convert_pdf_to_html(pdf_path, html_path):
     """Converts a PDF to HTML."""
     command = f"pdf2htmlEX {pdf_path} --dest-dir {html_path} --font-size-multiplier 1 --zoom 25"
-    subprocess.run(command, shell=True)
+    subprocess.run(command)
 
 
 def preprocess_html(output_path, file_name):
@@ -90,10 +89,11 @@ def preprocess_html(output_path, file_name):
         return complete_results, results_as_array
 
 
-def run_inference(query: str, llm_model: str):
+def run_inference(query: str, llm_model: str, local_ip=None):
     """Sends query to openai and returns the response"""
     if llm_model == "local-model":
-        local_ip = "172.31.48.1"
+        if local_ip is None:
+            raise ValueError("local_ip must be provided when using local-model")
         client = OpenAI(base_url=f"http://{local_ip}:5000/v1", api_key="not-needed")
     else:
         client = OpenAI()
@@ -137,6 +137,7 @@ def save_inference_as_json(response: str, output_path: str, file_name: str):
         json.loads(response)
     except ValueError:
         print("Response is not valid JSON")
+        raise
     else:
         with open(f"{output_path}/{file_name}.json", "w") as file:
             file.write(response)
