@@ -105,6 +105,7 @@ def run_inference(query: str, llm_model: str, local_ip=None):
     print("sending request")
     response = client.chat.completions.create(
         model=llm_model,
+        response_format={"type": "json_object"},
         stream=True,
         temperature=0.0,
         messages=[
