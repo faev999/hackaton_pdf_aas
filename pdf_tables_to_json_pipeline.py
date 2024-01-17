@@ -147,8 +147,9 @@ def save_inference_as_json(response: str, output_path: str, file_name: str):
 def main():
     llm_model = "gpt-4-1106-preview"
     # llm_model = "local-model"
+
     # Get a list of all pdfs in the folder
-    pdfs_folder_name = "pdfs_to_test"
+    pdfs_folder_name = "test"
     pdfs_to_test = []
 
     # Get the current working directory
