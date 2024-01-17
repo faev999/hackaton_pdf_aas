@@ -1,2 +1,5 @@
 pdfs_to_test/**/
 pdfs_to_test/*/
+test/
+.vscode/settings.json
+pdfs_to_test/pdf_test.zip
