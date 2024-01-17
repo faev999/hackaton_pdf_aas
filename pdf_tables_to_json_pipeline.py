@@ -42,7 +42,7 @@ def num_tokens_from_string(string: str, model_name: str) -> int:
 def convert_pdf_to_html(pdf_path, html_path):
     """Converts a PDF to HTML."""
     command = f"pdf2htmlEX {pdf_path} --dest-dir {html_path} --font-size-multiplier 1 --zoom 25"
-    subprocess.run(command)
+    subprocess.run(command, shell=True, check=True)
 
 
 def preprocess_html(output_path, file_name):
