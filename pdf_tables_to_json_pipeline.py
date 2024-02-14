@@ -31,7 +31,7 @@ from openai import OpenAI
 import json
 import tiktoken
 import os
-from typing import Tuple, List
+from typing import Tuple, List, Optional, NoReturn
 
 
 def calculate_token_count(text: str, model_identifier: str) -> int:
@@ -137,40 +137,50 @@ def _remove_images_and_empty_divs(div_element) -> None:
             del div.attrs["class"]
 
 
-def run_inference(query: str, llm_model: str, local_ip=None):
-    """Sends query to openai and returns the response"""
-    if llm_model == "local-model":
-        if local_ip is None:
-            raise ValueError("local_ip must be provided when using local-model")
-        client = OpenAI(base_url=f"http://{local_ip}:5000/v1", api_key="not-needed")
-    else:
-        client = OpenAI()
-    print("LLM client created")
-    print(
-        "Number of tokens to send: ",
-        calculate_token_count(query, "gpt-4-1106-preview"),
-    )
-    print("sending request")
-    response = client.chat.completions.create(
-        model=llm_model,
+def execute_model_inference(
+    query: str, model_identifier: str, api_endpoint: Optional[str] = None
+) -> str:
+    """
+    Executes an inference query using a specified language model, optionally via a local server.
+
+    Parameters:
+    - query (str): The query to send to the model.
+    - model_identifier (str): The identifier of the model to use for the inference.
+    - api_endpoint (Optional[str]): The base URL for the API, if using a local model server. Defaults to None.
+
+    Returns:
+    - str: The complete response from the model.
+
+    Raises:
+    - ValueError: If `api_endpoint` is required but not provided.
+    """
+    if model_identifier == "local-model" and api_endpoint is None:
+        raise ValueError("API endpoint must be provided when using a local model.")
+
+    client = OpenAI(base_url=f"http://{api_endpoint}/v1" if api_endpoint else None)
+
+    print(f"Model client for {model_identifier} created. Preparing to send query...")
+
+    token_count = calculate_token_count(query, model_identifier)
+    print(f"Number of tokens to send: {token_count}")
+
+    print("Sending request...")
+    response_stream = client.chat.completions.create(
+        model=model_identifier,
         response_format={"type": "json_object"},
         stream=True,
         temperature=0.0,
         messages=[
             {
                 "role": "system",
-                "content": "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into the HTML code that's inside triple quotes. Please turn that code into several JSON objects that represent the original tables. Only return the json objects, no additional commentary or content.",
+                "content": "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into the HTML code that's inside triple backticks. Please turn that code into several JSON objects that represent the original tables. Only return the json objects, no additional commentary or content.",
             },
-            {
-                "role": "user",
-                "content": '"""\n' + query + '"""\n',
-            },
+            {"role": "user", "content": "```\n" + query + "```"},
         ],
     )
+
     complete_response = ""
-    # Print stream
-    print("Response:")
-    for chunk in response:
+    for chunk in response_stream:
         if chunk.choices[0].delta.content is not None:
             print(chunk.choices[0].delta.content, end="")
             complete_response += chunk.choices[0].delta.content
@@ -229,7 +239,7 @@ def main():
         )
         complete_response = ""
 
-        complete_response = run_inference(whole_html, llm_model)
+        complete_response = execute_model_inference(whole_html, llm_model)
         save_inference_as_json(complete_response, output_path, f"{file_name}_whole")
 
         # # Run inference for each html page
