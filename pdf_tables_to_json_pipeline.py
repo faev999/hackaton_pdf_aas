@@ -54,10 +54,28 @@ def calculate_token_count(text: str, model_identifier: str) -> int:
     return len(encoding.encode(text))
 
 
-def convert_pdf_to_html(pdf_path, html_path):
-    """Converts a PDF to HTML."""
-    command = f"pdf2htmlEX {pdf_path} --dest-dir {html_path} --font-size-multiplier 1 --zoom 25"
-    subprocess.run(command, shell=True, check=True)
+def convert_pdf_to_html(pdf_file_path: str, output_directory: str) -> None:
+    """
+    Converts a PDF file to HTML format, saving the output in a specified directory.
+
+    Parameters:
+    - pdf_file_path (str): The file path of the PDF to convert.
+    - output_directory (str): The directory where the HTML file will be saved.
+
+    Raises:
+    - FileNotFoundError: If the specified PDF file does not exist.
+    - subprocess.CalledProcessError: If the pdf2htmlEX command fails.
+    """
+    if not os.path.exists(pdf_file_path):
+        raise FileNotFoundError(
+            f"The specified PDF file does not exist: {pdf_file_path}"
+        )
+
+    command = f"pdf2htmlEX '{pdf_file_path}' --dest-dir '{output_directory}' --font-size-multiplier 1 --zoom 25"
+    try:
+        subprocess.run(command, shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        raise Exception(f"Failed to convert PDF to HTML: {e}")
 
 
 def preprocess_html(output_path, file_name):
