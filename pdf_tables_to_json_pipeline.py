@@ -187,19 +187,40 @@ def execute_model_inference(
     return complete_response
 
 
-def save_inference_as_json(response: str, output_path: str, file_name: str):
-    """Verifies if response is valid JSON and saves it to json file"""
+def save_response_as_json(
+    response: str, output_directory: str, output_file_name: str
+) -> NoReturn:
+    """
+    Validates the given response string as JSON and saves it to a specified file in JSON format.
 
-    # Remove ```json and ``` from response
-    response = response.replace("```json", "").replace("```", "")
+    Parameters:
+    - response (str): The response string to validate and save.
+    - output_directory (str): The directory path where the JSON file will be saved.
+    - output_file_name (str): The name of the file to which the JSON data will be written.
+
+    Raises:
+    - ValueError: If the response string is not valid JSON.
+    - IOError: If there is an issue writing the file.
+    """
+    cleaned_response = response.strip(
+        "```"
+    )  # More robust stripping of potential formatting characters
+
     try:
-        json.loads(response)
-    except ValueError:
-        print("Response is not valid JSON")
-        raise
-    else:
-        with open(f"{output_path}/{file_name}.json", "w") as file:
-            file.write(response)
+        parsed_response = json.loads(
+            cleaned_response
+        )  # Attempt to parse the string as JSON
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Failed to decode response as JSON: {e}")
+
+    output_file_path = f"{output_directory}/{output_file_name}.json"
+    try:
+        with open(output_file_path, "w") as file:
+            json.dump(
+                parsed_response, file, indent=4
+            )  # Write the parsed JSON back out, nicely formatted
+    except IOError as e:
+        raise IOError(f"Error writing JSON to file {output_file_path}: {e}")
 
 
 def main():
@@ -240,7 +261,7 @@ def main():
         complete_response = ""
 
         complete_response = execute_model_inference(whole_html, llm_model)
-        save_inference_as_json(complete_response, output_path, f"{file_name}_whole")
+        save_response_as_json(complete_response, output_path, f"{file_name}_whole")
 
         # # Run inference for each html page
         # for html_page in array_of_htmls:
