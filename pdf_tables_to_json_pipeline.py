@@ -31,6 +31,7 @@ from openai import OpenAI
 import json
 import tiktoken
 import os
+from typing import Tuple, List
 
 
 def calculate_token_count(text: str, model_identifier: str) -> int:
@@ -78,48 +79,62 @@ def convert_pdf_to_html(pdf_file_path: str, output_directory: str) -> None:
         raise Exception(f"Failed to convert PDF to HTML: {e}")
 
 
-def preprocess_html(output_path, file_name):
-    """Cleans HTML code from images, styles and other elements"""
-    # Open the HTML file and read its content
-    with open(f"{output_path}/{file_name}.html", "r") as file:
-        html_content = file.read()
+def clean_html_content(html_file_path: str) -> Tuple[str, List[str]]:
+    """
+    Removes images, styles, and non-textual elements from an HTML file,
+    and saves the cleaned content to a new file.
 
-    # Parse the HTML content
+    Parameters:
+    - html_file_path (str): The path to the original HTML file.
+
+    Returns:
+    - Tuple[str, List[str]]: A tuple containing the complete cleaned HTML content as a string
+      and a list of cleaned div elements as strings.
+
+    Raises:
+    - IOError: If the specified HTML file cannot be read or written.
+    """
+    try:
+        with open(html_file_path, "r") as file:
+            html_content = file.read()
+    except IOError as e:
+        raise IOError(f"Failed to read HTML file at {html_file_path}: {e}")
+
     soup = BeautifulSoup(html_content, "html.parser")
+    page_divs = soup.find_all("div", attrs={"data-page-no": True})
 
-    # Find all div elements with a "data-page-no" attribute
-    div_elements = soup.find_all("div", attrs={"data-page-no": True})
+    cleaned_html = ""
+    divs_as_strings = []
+    for div in page_divs:
+        _remove_images_and_empty_divs(div)
+        div_as_str = str(div)
+        divs_as_strings.append(div_as_str)
+        cleaned_html += div_as_str
 
-    complete_results = ""
-    results_as_array = []
-    # Open the output file in write mode
-    with open(f"{output_path}/processed_{file_name}.html", "w") as file:
-        # Loop over the div elements
-        for div_element in div_elements:
-            # Find and remove all img elements within the div
-            for img in div_element.find_all("img"):
-                img.decompose()
+    processed_html_path = html_file_path.replace(".html", "_processed.html")
+    try:
+        with open(processed_html_path, "w") as file:
+            file.write(cleaned_html + "\n")
+    except IOError as e:
+        raise IOError(f"Failed to write cleaned HTML to {processed_html_path}: {e}")
 
-            # Find and remove all div elements that don't contain any text
-            for div in div_element.find_all("div"):
-                if not div.find_all(
-                    string=lambda text: isinstance(text, NavigableString)
-                ):
-                    div.decompose()
-                # Check if the div has a class style attribute
-                elif "class" in div.attrs:
-                    # Remove the class attribute
-                    del div.attrs["class"]
+    return cleaned_html, divs_as_strings
 
-            # Convert the div element back to string
-            result_div = str(div_element)
-            results_as_array.append(result_div)
-            # Append the result to variable
-            complete_results = complete_results + result_div
 
-            # Write the result to the file
-        file.write(complete_results + "\n")
-        return complete_results, results_as_array
+def _remove_images_and_empty_divs(div_element) -> None:
+    """
+    Helper function to remove image tags and empty divs from a div element.
+
+    Parameters:
+    - div_element (bs4.element.Tag): The BeautifulSoup tag object representing a div element.
+    """
+    for img in div_element.find_all("img"):
+        img.decompose()
+    for div in div_element.find_all("div"):
+        if not div.find_all(string=lambda text: isinstance(text, NavigableString)):
+            div.decompose()
+        elif "class" in div.attrs:
+            del div.attrs["class"]
 
 
 def run_inference(query: str, llm_model: str, local_ip=None):
@@ -178,7 +193,7 @@ def save_inference_as_json(response: str, output_path: str, file_name: str):
 
 
 def main():
-    llm_model = "gpt-3.5-turbo-0125"
+    llm_model = "gpt-4-0125-preview"
     # llm_model = "local-model"
 
     # Get a list of all pdfs in the folder
@@ -209,7 +224,9 @@ def main():
         convert_pdf_to_html(pdf, output_path)
 
         # get whole html and array of htmls preprocessed
-        whole_html, array_of_htmls = preprocess_html(output_path, file_name)
+        whole_html, array_of_htmls = clean_html_content(
+            output_path + "/" + file_name + ".html"
+        )
         complete_response = ""
 
         complete_response = run_inference(whole_html, llm_model)
