@@ -223,60 +223,62 @@ def save_response_as_json(
         raise IOError(f"Error writing JSON to file {output_file_path}: {e}")
 
 
+def process_single_pdf(
+    pdf_folder_path: str, pdf_file: str, model_identifier: str
+) -> None:
+    """
+    Converts a single PDF to HTML, cleans the HTML, runs model inference, and saves the result.
+
+    Parameters:
+    - pdf_folder_path (str): The full path to the folder containing the PDF.
+    - pdf_file (str): The name of the PDF file to process.
+    - model_identifier (str): The model identifier for running inference.
+    """
+    file_name = pdf_file.replace(".pdf", "")
+    output_path = os.path.join(pdf_folder_path, file_name)
+
+    # Convert PDF to HTML and clean the HTML content
+    convert_pdf_to_html(os.path.join(pdf_folder_path, pdf_file), output_path)
+    whole_html, _ = clean_html_content(os.path.join(output_path, f"{file_name}.html"))
+
+    # Execute model inference and save the result as JSON
+    complete_response = execute_model_inference(whole_html, model_identifier)
+    save_response_as_json(complete_response, output_path, f"{file_name}_whole")
+
+
+def print_running_time(start_time: float) -> None:
+    """
+    Prints the total running time since a given start time.
+
+    Parameters:
+    - start_time (float): The start time in seconds.
+    """
+    end_time = time.time()
+    running_time = end_time - start_time
+    print(f"Running time: {running_time:.2f} seconds")
+
+
 def main():
-    llm_model = "gpt-4-0125-preview"
-    # llm_model = "local-model"
+    """
+    Processes all PDF files in a given folder: converting them to HTML, cleaning the HTML content,
+    running model inference on the cleaned content, and saving the inference results as JSON.
 
-    # Get a list of all pdfs in the folder
-    pdfs_folder_name = "test"
-    pdfs_to_test = []
-
-    # Get the current working directory
-    current_directory = os.getcwd()
-
-    # Create the full path to the folder
-    folder_path = os.path.join(current_directory, pdfs_folder_name)
-
-    # Get a list of all files and folders in the specified folder
-    contents = os.listdir(folder_path)
-
-    for item in contents:
-        if item.endswith(".pdf"):
-            pdfs_to_test.append(f"{folder_path}/{item}")
-
+    Parameters:
+    - pdf_folder (str): The folder containing PDF files to process.
+    - model_identifier (str): The identifier of the model used for inference.
+    """
+    model_identifier = "gpt-4-0125-preview"
+    pdf_folder = "test"
     start_time = time.time()
-    # process each pdf
-    for pdf in pdfs_to_test:
-        # Split file name from path by removing everything behind the last "/"
-        file_name = pdf.split("/")[-1].replace(".pdf", "")
-        output_path = pdf.replace(".pdf", "")
 
-        # Convert pdf to html and writes to disk
-        convert_pdf_to_html(pdf, output_path)
+    # Resolve the full path to the PDF folder and gather all PDF files
+    pdf_folder_path = os.path.join(os.getcwd(), pdf_folder)
+    pdf_files = [f for f in os.listdir(pdf_folder_path) if f.endswith(".pdf")]
 
-        # get whole html and array of htmls preprocessed
-        whole_html, array_of_htmls = clean_html_content(
-            output_path + "/" + file_name + ".html"
-        )
-        complete_response = ""
+    for pdf_file in pdf_files:
+        process_single_pdf(pdf_folder_path, pdf_file, model_identifier)
 
-        complete_response = execute_model_inference(whole_html, llm_model)
-        save_response_as_json(complete_response, output_path, f"{file_name}_whole")
-
-        # # Run inference for each html page
-        # for html_page in array_of_htmls:
-        #     json_filename = file_name + "_page_" + str(array_of_htmls.index(html_page))
-
-        #     # finds the tables in the html page and converts them to json
-        #     individual_response = run_inference(html_page, llm_model)
-
-        #     # save inference result as json
-        #     save_inference_as_json(individual_response, output_path, json_filename)
-        #     complete_response += individual_response
-
-        end_time = time.time()
-        running_time = end_time - start_time
-        print("Running time:", running_time, "seconds")
+    print_running_time(start_time)
 
 
 if __name__ == "__main__":
