@@ -4,3 +4,4 @@ test/
 .vscode/settings.json
 pdfs_to_test/pdf_test.zip
 __pycache__/pdf_tables_to_json_pipeline.cpython-311.pyc
+__pycache__/pdf_tables_to_json_pipeline.cpython-310.pyc
