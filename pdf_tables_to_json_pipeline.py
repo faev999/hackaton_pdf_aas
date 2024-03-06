@@ -291,7 +291,7 @@ class PdfToJsonPipeline:
         print("Sending request...")
         response_stream = client.chat.completions.create(
             model=self.model_identifier,
-            stream=False,
+            stream=True,
             temperature=0.0,
             messages=[
                 {
@@ -302,12 +302,13 @@ class PdfToJsonPipeline:
             ],
         )
 
-        # complete_response = ""
-        # for chunk in response_stream:
-        #     if chunk.choices[0].delta.content is not None:
-        #         print(chunk.choices[0].delta.content, end="")
-        #         complete_response += chunk.choices[0].delta.content
-        return response_stream.choices[0].message.content
+        complete_response = ""
+        for chunk in response_stream:
+            if chunk.choices[0].delta.content is not None:
+                print(chunk.choices[0].delta.content, end="")
+                complete_response += chunk.choices[0].delta.content
+        return complete_response
+        # return response_stream.choices[0].message.content
 
     
     def text_tables_to_yaml_llm(self, query: str) -> str:
@@ -342,7 +343,7 @@ class PdfToJsonPipeline:
         print("Sending request...")
         response_stream = client.chat.completions.create(
             model=self.model_identifier,
-            stream=False,
+            stream=True,
             temperature=0.0,
             messages=[
                 {
@@ -353,12 +354,14 @@ class PdfToJsonPipeline:
             ],
         )
 
-        # complete_response = ""
-        # for chunk in response_stream:
-        #     if chunk.choices[0].delta.content is not None:
-        #         print(chunk.choices[0].delta.content, end="")
-        #         complete_response += chunk.choices[0].delta.content
-        return response_stream.choices[0].message.content
+        complete_response = ""
+        for chunk in response_stream:
+            if chunk.choices[0].delta.content is not None:
+                print(chunk.choices[0].delta.content, end="")
+                complete_response += chunk.choices[0].delta.content
+        return complete_response
+        
+        # return response_stream.choices[0].message.content
 
     
     def save_response_as_json(
