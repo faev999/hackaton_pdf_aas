@@ -32,13 +32,14 @@ import json
 import tiktoken
 import os
 from typing import Tuple, List, Optional, NoReturn
+import html2text
+
 
 class PdfToJsonPipeline:
-    
     def __init__(self, model_identifier: str, api_endpoint: Optional[str] = None):
         self.model_identifier = model_identifier
         self.api_endpoint = api_endpoint
-    
+
     def calculate_token_count(self, text: str) -> int:
         """
         Calculate the number of tokens in a given text based on a specified model's encoding.
@@ -58,7 +59,6 @@ class PdfToJsonPipeline:
         except KeyError:
             raise ValueError(f"Unknown model identifier: {self.model_identifier}")
         return len(encoding.encode(text))
-
 
     def convert_pdf_to_html(self, pdf_file_path: str, output_directory: str) -> None:
         """
@@ -82,7 +82,6 @@ class PdfToJsonPipeline:
             subprocess.run(command, shell=True, check=True)
         except subprocess.CalledProcessError as e:
             raise Exception(f"Failed to convert PDF to HTML: {e}")
-
 
     def clean_html_content(self, html_file_path: str) -> Tuple[str, List[str]]:
         """
@@ -125,7 +124,6 @@ class PdfToJsonPipeline:
 
         return cleaned_html, divs_as_strings
 
-
     def _remove_images_and_empty_divs(self, div_element) -> None:
         """
         Helper function to remove image tags and empty divs from a div element.
@@ -141,10 +139,7 @@ class PdfToJsonPipeline:
             elif "class" in div.attrs:
                 del div.attrs["class"]
 
-
-    def execute_model_inference(
-        self, query: str
-    ) -> str:
+    def html_tables_to_json_llm(self, query: str) -> str:
         """
         Executes an inference query using a specified language model, optionally via a local server.
 
@@ -162,9 +157,13 @@ class PdfToJsonPipeline:
         if self.model_identifier == "local-model" and self.api_endpoint is None:
             raise ValueError("API endpoint must be provided when using a local model.")
 
-        client = OpenAI(base_url=f"http://{self.api_endpoint}/v1" if self.api_endpoint else None)
+        client = OpenAI(
+            base_url=f"http://{self.api_endpoint}/v1" if self.api_endpoint else None
+        )
 
-        print(f"Model client for {self.model_identifier} created. Preparing to send query...")
+        print(
+            f"Model client for {self.model_identifier} created. Preparing to send query..."
+        )
 
         token_count = self.calculate_token_count(query)
         print(f"Number of tokens to send: {token_count}")
@@ -190,8 +189,178 @@ class PdfToJsonPipeline:
                 print(chunk.choices[0].delta.content, end="")
                 complete_response += chunk.choices[0].delta.content
         return complete_response
+    
+    def html_to_text(self, html_data) -> str:
+        """
+        Converts a HTML file to text format, saving the output in a specified directory.
 
+        Parameters:
+        - html_file_path (str): The file path of the HTML to convert.
 
+        Returns:
+        - str: The complete text content of the HTML file.
+        """
+        h = html2text.HTML2Text()
+        # Ignore converting links from HTML
+        h.ignore_links = True
+        
+
+        text_data = h.handle(html_data)
+        return text_data
+    
+    def text_tables_to_json_llm(self, query: str) -> str:
+        """
+        Executes an inference query using a specified language model, optionally via a local server.
+
+        Parameters:
+        - query (str): The query to send to the model.
+        - model_identifier (str): The identifier of the model to use for the inference.
+        - api_endpoint (Optional[str]): The base URL for the API, if using a local model server. Defaults to None.
+
+        Returns:
+        - str: The complete response from the model.
+
+        Raises:
+        - ValueError: If `api_endpoint` is required but not provided.
+        """
+        if self.model_identifier == "local-model" and self.api_endpoint is None:
+            raise ValueError("API endpoint must be provided when using a local model.")
+
+        client = OpenAI(
+            base_url=f"http://{self.api_endpoint}/v1" if self.api_endpoint else None
+        )
+
+        print(
+            f"Model client for {self.model_identifier} created. Preparing to send query..."
+        )
+
+        token_count = self.calculate_token_count(query)
+        print(f"Number of tokens to send: {token_count}")
+
+        print("Sending request...")
+        response_stream = client.chat.completions.create(
+            model=self.model_identifier,
+            response_format={"type": "json_object"},
+            stream=True,
+            temperature=0.0,
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into HTML code and then into the text that's inside triple backticks. Please turn that text into several JSON objects that represent the original tables. Only return the json objects, no additional commentary or content.",
+                },
+                {"role": "user", "content": "```\n" + query + "```"},
+            ],
+        )
+
+        complete_response = ""
+        for chunk in response_stream:
+            if chunk.choices[0].delta.content is not None:
+                print(chunk.choices[0].delta.content, end="")
+                complete_response += chunk.choices[0].delta.content
+        return complete_response
+
+    def html_tables_to_yaml_llm(self, query: str) -> str:
+        """
+        Executes an inference query using a specified language model, optionally via a local server.
+
+        Parameters:
+        - query (str): The query to send to the model.
+        - model_identifier (str): The identifier of the model to use for the inference.
+        - api_endpoint (Optional[str]): The base URL for the API, if using a local model server. Defaults to None.
+
+        Returns:
+        - str: The complete response from the model.
+
+        Raises:
+        - ValueError: If `api_endpoint` is required but not provided.
+        """
+        if self.model_identifier == "local-model" and self.api_endpoint is None:
+            raise ValueError("API endpoint must be provided when using a local model.")
+
+        client = OpenAI(
+            base_url=f"http://{self.api_endpoint}/v1" if self.api_endpoint else None
+        )
+
+        print(
+            f"Model client for {self.model_identifier} created. Preparing to send query..."
+        )
+
+        token_count = self.calculate_token_count(query)
+        print(f"Number of tokens to send: {token_count}")
+
+        print("Sending request...")
+        response_stream = client.chat.completions.create(
+            model=self.model_identifier,
+            stream=True,
+            temperature=0.0,
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into the HTML code that's inside triple backticks. Please turn that code into several YAML objects that represent the original tables. Only return the YAML objects, no additional commentary or content.",
+                },
+                {"role": "user", "content": "```\n" + query + "```"},
+            ],
+        )
+
+        complete_response = ""
+        for chunk in response_stream:
+            if chunk.choices[0].delta.content is not None:
+                print(chunk.choices[0].delta.content, end="")
+                complete_response += chunk.choices[0].delta.content
+        return complete_response
+
+    
+    def text_tables_to_yaml_llm(self, query: str) -> str:
+        """
+        Executes an inference query using a specified language model, optionally via a local server.
+
+        Parameters:
+        - query (str): The query to send to the model.
+        - model_identifier (str): The identifier of the model to use for the inference.
+        - api_endpoint (Optional[str]): The base URL for the API, if using a local model server. Defaults to None.
+
+        Returns:
+        - str: The complete response from the model.
+
+        Raises:
+        - ValueError: If `api_endpoint` is required but not provided.
+        """
+        if self.model_identifier == "local-model" and self.api_endpoint is None:
+            raise ValueError("API endpoint must be provided when using a local model.")
+
+        client = OpenAI(
+            base_url=f"http://{self.api_endpoint}/v1" if self.api_endpoint else None
+        )
+
+        print(
+            f"Model client for {self.model_identifier} created. Preparing to send query..."
+        )
+
+        token_count = self.calculate_token_count(query)
+        print(f"Number of tokens to send: {token_count}")
+
+        print("Sending request...")
+        response_stream = client.chat.completions.create(
+            model=self.model_identifier,
+            stream=True,
+            temperature=0.0,
+            messages=[
+                {
+                    "role": "system",
+                    "content": "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into HTML code and then into the text that's inside triple backticks. Please turn that text into several YAML objects that represent the original tables. Only return the YAML objects, no additional commentary or content.",
+                },
+                {"role": "user", "content": "```\n" + query + "```"},
+            ],
+        )
+
+        complete_response = ""
+        for chunk in response_stream:
+            if chunk.choices[0].delta.content is not None:
+                print(chunk.choices[0].delta.content, end="")
+                complete_response += chunk.choices[0].delta.content
+        return complete_response
+
+    
     def save_response_as_json(
         self, response: str, output_directory: str, output_file_name: str
     ) -> NoReturn:
@@ -226,6 +395,3 @@ class PdfToJsonPipeline:
                 )  # Write the parsed JSON back out, nicely formatted
         except IOError as e:
             raise IOError(f"Error writing JSON to file {output_file_path}: {e}")
-        
-
-
