@@ -33,7 +33,7 @@ import tiktoken
 import os
 from typing import Tuple, List, Optional, NoReturn
 import html2text
-
+import yaml
 
 class PdfToJsonPipeline:
     def __init__(self, model_identifier: str, api_endpoint: Optional[str] = None):
@@ -395,3 +395,47 @@ class PdfToJsonPipeline:
                 )  # Write the parsed JSON back out, nicely formatted
         except IOError as e:
             raise IOError(f"Error writing JSON to file {output_file_path}: {e}")
+        
+    def save_response_as_yaml(
+        self, response: str, output_directory: str, output_file_name: str
+    ) -> NoReturn:
+        """
+        Validates the given response string as YAML and saves it to a specified file in YAML format.
+
+        Parameters:
+        - response (str): The response string to validate and save.
+        - output_directory (str): The directory path where the YAML file will be saved.
+        - output_file_name (str): The name of the file to which the YAML data will be written.
+
+        Raises:
+        - ValueError: If the response string is not valid YAML.
+        - IOError: If there is an issue writing the file.
+        """
+        cleaned_response = response.strip(
+            "```"
+        )  # More robust stripping of potential formatting characters
+        
+        # Replace all newline characters with a space
+        cleaned_response = cleaned_response.replace("\n", " ")
+
+        cleaned_response = cleaned_response.replace("\"", "")
+        # Add quotes around the cleaned_response string
+        cleaned_response = f'"{cleaned_response}"'
+    
+        try:
+            parsed_response = yaml.safe_load(
+                cleaned_response
+            )  # Attempt to parse the string as YAML
+        except yaml.YAMLError as e:
+            raise ValueError(f"Failed to decode response as YAML: {e}")
+
+        output_file_path = f"{output_directory}/{output_file_name}.yaml"
+        try:
+            with open(output_file_path, "w") as file:
+                file.write(
+                    parsed_response
+                )  # Write the parsed YAML back out as text
+        except IOError as e:
+            raise IOError(f"Error writing YAML to file {output_file_path}: {e}")
+        
+      
