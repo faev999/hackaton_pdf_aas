@@ -27,23 +27,40 @@ class ProcessPdfs:
         cleaned_html, divs = self.pipeline.clean_html_content(
             os.path.join(output_path, f"{file_name}.html")
         )
+        
         text_data = self.pipeline.html_to_text(cleaned_html)
         
         # Execute model inference and save the result as JSON
-        # html_tables_as_json = self.pipeline.html_tables_to_json_llm(cleaned_html)
+        html_tables_as_json = self.pipeline.html_tables_to_json_llm(cleaned_html)
+        print(html_tables_as_json)
+        self.pipeline.save_response_as_json(
+        html_tables_as_json, output_path, f"{file_name}_whole"
+        )
         
-        # text_tables_as_json = self.pipeline.text_tables_to_json_llm(text_data)
+        text_tables_as_json = self.pipeline.text_tables_to_json_llm(text_data)
+        print(text_tables_as_json)
+        self.pipeline.save_response_as_json(
+            text_tables_as_json, output_path, f"{file_name}_whole_text"
+        )
         
-        # text_tables_as_yaml = self.pipeline.text_tables_to_yaml_llm(text_data)
         
         html_tables_as_yaml = self.pipeline.html_tables_to_yaml_llm(cleaned_html)
-        
+        # print(html_tables_as_yaml)
+      
         self.pipeline.save_response_as_yaml(
             html_tables_as_yaml, output_path, f"{file_name}_whole"
         )
-        # self.pipeline.save_response_as_json(
-        #     html_tables_as_json, output_path, f"{file_name}_whole"
+        
+        text_tables_as_yaml = self.pipeline.text_tables_to_yaml_llm(text_data)
+        # print(text_tables_as_yaml)
+        self.pipeline.save_response_as_yaml(
+            text_tables_as_yaml, output_path, f"{file_name}_whole_text"
+        )
+        # self.pipeline.save_response_as_txt(
+        #     html_tables_as_yaml, output_path, f"{file_name}_whole"
         # )
+      
+        
 
     def print_running_time(self, start_time: float) -> None:
         """
