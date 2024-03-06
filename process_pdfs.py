@@ -2,6 +2,7 @@ import os
 import time
 from pdf_tables_to_json_pipeline import PdfToJsonPipeline
 
+
 class ProcessPdfs:
     def __init__(self, model_identifier: str, pdf_folder: str):
         self.model_identifier = model_identifier
@@ -20,12 +21,28 @@ class ProcessPdfs:
         output_path = os.path.join(pdf_folder_path, file_name)
 
         # Convert PDF to HTML and clean the HTML content
-        self.pipeline.convert_pdf_to_html(os.path.join(pdf_folder_path, pdf_file), output_path)
-        whole_html, _ = self.pipeline.clean_html_content(os.path.join(output_path, f"{file_name}.html"))
-
+        self.pipeline.convert_pdf_to_html(
+            os.path.join(pdf_folder_path, pdf_file), output_path
+        )
+        cleaned_html, divs = self.pipeline.clean_html_content(
+            os.path.join(output_path, f"{file_name}.html")
+        )
+        text_data = self.pipeline.html_to_text(cleaned_html)
+        
         # Execute model inference and save the result as JSON
-        complete_response = self.pipeline.execute_model_inference(whole_html)
-        self.pipeline.save_response_as_json(complete_response, output_path, f"{file_name}_whole")
+        # html_tables_as_json = self.pipeline.html_tables_to_json_llm(cleaned_html)
+        
+        # text_tables_as_json = self.pipeline.text_tables_to_json_llm(text_data)
+        
+        # text_tables_as_yaml = self.pipeline.text_tables_to_yaml_llm(text_data)
+        
+        html_tables_as_yaml = self.pipeline.html_tables_to_yaml_llm(cleaned_html)
+        
+        
+        
+        # self.pipeline.save_response_as_json(
+        #     html_tables_as_json, output_path, f"{file_name}_whole"
+        # )
 
     def print_running_time(self, start_time: float) -> None:
         """
@@ -54,11 +71,13 @@ class ProcessPdfs:
 
         self.print_running_time(start_time)
 
+
 def main():
     model_identifier = "gpt-4-0125-preview"
     pdf_folder = "test"
     process_pdfs = ProcessPdfs(model_identifier, pdf_folder)
     process_pdfs.run()
-    
+
+
 if __name__ == "__main__":
     main()
