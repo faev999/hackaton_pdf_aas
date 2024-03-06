@@ -291,7 +291,7 @@ class PdfToJsonPipeline:
         print("Sending request...")
         response_stream = client.chat.completions.create(
             model=self.model_identifier,
-            stream=True,
+            stream=False,
             temperature=0.0,
             messages=[
                 {
@@ -302,12 +302,12 @@ class PdfToJsonPipeline:
             ],
         )
 
-        complete_response = ""
-        for chunk in response_stream:
-            if chunk.choices[0].delta.content is not None:
-                print(chunk.choices[0].delta.content, end="")
-                complete_response += chunk.choices[0].delta.content
-        return complete_response
+        # complete_response = ""
+        # for chunk in response_stream:
+        #     if chunk.choices[0].delta.content is not None:
+        #         print(chunk.choices[0].delta.content, end="")
+        #         complete_response += chunk.choices[0].delta.content
+        return response_stream.choices[0].message.content
 
     
     def text_tables_to_yaml_llm(self, query: str) -> str:
@@ -342,7 +342,7 @@ class PdfToJsonPipeline:
         print("Sending request...")
         response_stream = client.chat.completions.create(
             model=self.model_identifier,
-            stream=True,
+            stream=False,
             temperature=0.0,
             messages=[
                 {
@@ -353,12 +353,12 @@ class PdfToJsonPipeline:
             ],
         )
 
-        complete_response = ""
-        for chunk in response_stream:
-            if chunk.choices[0].delta.content is not None:
-                print(chunk.choices[0].delta.content, end="")
-                complete_response += chunk.choices[0].delta.content
-        return complete_response
+        # complete_response = ""
+        # for chunk in response_stream:
+        #     if chunk.choices[0].delta.content is not None:
+        #         print(chunk.choices[0].delta.content, end="")
+        #         complete_response += chunk.choices[0].delta.content
+        return response_stream.choices[0].message.content
 
     
     def save_response_as_json(
@@ -412,15 +412,14 @@ class PdfToJsonPipeline:
         - IOError: If there is an issue writing the file.
         """
         cleaned_response = response.strip(
-            "```"
-        )  # More robust stripping of potential formatting characters
+            "```yaml"
+        )
         
-        # Replace all newline characters with a space
-        cleaned_response = cleaned_response.replace("\n", " ")
+        cleaned_response = cleaned_response.strip(
+            "```"
+        )  
 
         cleaned_response = cleaned_response.replace("\"", "")
-        # Add quotes around the cleaned_response string
-        cleaned_response = f'"{cleaned_response}"'
     
         try:
             parsed_response = yaml.safe_load(
@@ -433,7 +432,34 @@ class PdfToJsonPipeline:
         try:
             with open(output_file_path, "w") as file:
                 file.write(
-                    parsed_response
+                    str(parsed_response)
+                )  # Write the parsed YAML back out as text
+        except IOError as e:
+            raise IOError(f"Error writing YAML to file {output_file_path}: {e}")
+        
+    def save_response_as_txt(
+        self, response: str, output_directory: str, output_file_name: str
+    ) -> NoReturn:
+        """
+        Validates the given response string as YAML and saves it to a specified file in YAML format.
+
+        Parameters:
+        - response (str): The response string to validate and save.
+        - output_directory (str): The directory path where the YAML file will be saved.
+        - output_file_name (str): The name of the file to which the YAML data will be written.
+
+        Raises:
+        - ValueError: If the response string is not valid YAML.
+        - IOError: If there is an issue writing the file.
+        """
+       
+       
+
+        output_file_path = f"{output_directory}/{output_file_name}.yaml"
+        try:
+            with open(output_file_path, "w") as file:
+                file.write(
+                    response
                 )  # Write the parsed YAML back out as text
         except IOError as e:
             raise IOError(f"Error writing YAML to file {output_file_path}: {e}")
