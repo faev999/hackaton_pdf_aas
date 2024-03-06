@@ -33,7 +33,7 @@ class ProcessPdfs:
         start_time = time.time()
         # Execute model inference and save the result as JSON
         html_tables_as_json = self.pipeline.html_tables_to_json_llm(cleaned_html)
-        print(html_tables_as_json)
+        # print(html_tables_as_json)
         self.pipeline.save_response_as_json(
         html_tables_as_json, output_path, f"{file_name}_whole"
         )
@@ -41,7 +41,7 @@ class ProcessPdfs:
         
         start_time = time.time()
         text_tables_as_json = self.pipeline.text_tables_to_json_llm(text_data)
-        print(text_tables_as_json)
+        # print(text_tables_as_json)
         self.pipeline.save_response_as_json(
             text_tables_as_json, output_path, f"{file_name}_whole_text"
         )
