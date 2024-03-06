@@ -38,8 +38,9 @@ class ProcessPdfs:
         
         html_tables_as_yaml = self.pipeline.html_tables_to_yaml_llm(cleaned_html)
         
-        
-        
+        self.pipeline.save_response_as_yaml(
+            html_tables_as_yaml, output_path, f"{file_name}_whole"
+        )
         # self.pipeline.save_response_as_json(
         #     html_tables_as_json, output_path, f"{file_name}_whole"
         # )
