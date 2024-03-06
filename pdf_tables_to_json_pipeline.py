@@ -296,7 +296,7 @@ class PdfToJsonPipeline:
             messages=[
                 {
                     "role": "system",
-                    "content": "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into the HTML code that's inside triple backticks. Please turn that code into several valid YAML structures that represent the original tables. Make yure the YAML structures are valid. Only return the YAML structures, no additional commentary or content.",
+                    "content": "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into the HTML code that's inside triple backticks. Please turn that code into several valid YAML structures that represent the original tables. Make yure the YAML structures are valid with no invalid chracters inside the values or the keys. Only return the YAML structures, no additional commentary or content.",
                 },
                 {"role": "user", "content": "```\n" + query + "```"},
             ],
@@ -347,7 +347,7 @@ class PdfToJsonPipeline:
             messages=[
                 {
                     "role": "system",
-                    "content": "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into HTML code and then into the text that's inside triple backticks. Please turn that text into several valid YAML structures that represent the original tables. Make yure the YAML structures are valid. Only return the YAML structures, no additional commentary or content.",
+                    "content": "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into HTML code and then into the text that's inside triple backticks. Please turn that text into several valid YAML structures that represent the original tables. Make yure the YAML structures are valid with no invalid chracters inside the values or the keys. Only return the YAML structures, no additional commentary or content.",
                 },
                 {"role": "user", "content": "```\n" + query + "```"},
             ],
@@ -405,7 +405,7 @@ class PdfToJsonPipeline:
         Parameters:
         - response (str): The response string to validate and save.
         - output_directory (str): The directory path where the YAML file will be saved.
-        - output_file_name (str): The name of the file to which the YAML data will be written.
+        - output_file_name (str): The name of the file to which the YAML structures will be written.
 
         Raises:
         - ValueError: If the response string is not valid YAML.
@@ -443,7 +443,7 @@ class PdfToJsonPipeline:
         Parameters:
         - response (str): The response string to validate and save.
         - output_directory (str): The directory path where the YAML file will be saved.
-        - output_file_name (str): The name of the file to which the YAML data will be written.
+        - output_file_name (str): The name of the file to which the YAML structures will be written.
 
         Raises:
         - ValueError: If the response string is not valid YAML.
