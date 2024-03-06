@@ -296,7 +296,7 @@ class PdfToJsonPipeline:
             messages=[
                 {
                     "role": "system",
-                    "content": "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into the HTML code that's inside triple backticks. Please turn that code into several YAML objects that represent the original tables. Only return the YAML objects, no additional commentary or content.",
+                    "content": "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into the HTML code that's inside triple backticks. Please turn that code into several valid YAML structures that represent the original tables. Make yure the YAML structures are valid. Only return the YAML structures, no additional commentary or content.",
                 },
                 {"role": "user", "content": "```\n" + query + "```"},
             ],
@@ -347,7 +347,7 @@ class PdfToJsonPipeline:
             messages=[
                 {
                     "role": "system",
-                    "content": "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into HTML code and then into the text that's inside triple backticks. Please turn that text into several YAML objects that represent the original tables. Only return the YAML objects, no additional commentary or content.",
+                    "content": "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into HTML code and then into the text that's inside triple backticks. Please turn that text into several valid YAML structures that represent the original tables. Make yure the YAML structures are valid. Only return the YAML structures, no additional commentary or content.",
                 },
                 {"role": "user", "content": "```\n" + query + "```"},
             ],
@@ -418,12 +418,11 @@ class PdfToJsonPipeline:
         cleaned_response = cleaned_response.strip(
             "```"
         )  
-
-        cleaned_response = cleaned_response.replace("\"", "")
+        # cleaned_response = cleaned_response.replace("\"", "")
     
         try:
-            parsed_response = yaml.safe_load(
-                cleaned_response
+            parsed_response = yaml.load(
+                cleaned_response, Loader=yaml.UnsafeLoader 
             )  # Attempt to parse the string as YAML
         except yaml.YAMLError as e:
             raise ValueError(f"Failed to decode response as YAML: {e}")
@@ -431,9 +430,7 @@ class PdfToJsonPipeline:
         output_file_path = f"{output_directory}/{output_file_name}.yaml"
         try:
             with open(output_file_path, "w") as file:
-                file.write(
-                    str(parsed_response)
-                )  # Write the parsed YAML back out as text
+                yaml.dump(parsed_response, file)
         except IOError as e:
             raise IOError(f"Error writing YAML to file {output_file_path}: {e}")
         
