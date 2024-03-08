@@ -32,7 +32,7 @@ class ProcessPdfs:
         
         start_time = time.time()
         # Execute model inference and save the result as JSON
-        html_tables_as_json = self.pipeline.html_tables_to_json_llm(cleaned_html, "gpt-4-turbo-preview", False, True)
+        html_tables_as_json = self.pipeline.html_tables_to_json_llm(cleaned_html, "gpt-3.5-turbo", False, True)
         # print(html_tables_as_json)
         self.pipeline.save_response_as_json(
         html_tables_as_json, output_path, f"{file_name}_whole"
@@ -40,7 +40,7 @@ class ProcessPdfs:
         self.print_running_time(start_time)
         
         start_time = time.time()
-        text_tables_as_json = self.pipeline.text_tables_to_json_llm(text_data,"gpt-4-turbo-preview", False, True)
+        text_tables_as_json = self.pipeline.text_tables_to_json_llm(text_data,"gpt-3.5-turbo", False, True)
         # print(text_tables_as_json)
         self.pipeline.save_response_as_json(
             text_tables_as_json, output_path, f"{file_name}_whole_text"
@@ -48,7 +48,7 @@ class ProcessPdfs:
         self.print_running_time(start_time)
         
         start_time = time.time()
-        html_tables_as_yaml = self.pipeline.html_tables_to_yaml_llm(cleaned_html,"gpt-4", False, False)
+        html_tables_as_yaml = self.pipeline.html_tables_to_yaml_llm(cleaned_html,"gpt-3.5-turbo", False, False)
         # print(html_tables_as_yaml)
         self.pipeline.save_response_as_yaml(
             html_tables_as_yaml, output_path, f"{file_name}_whole"
@@ -59,7 +59,7 @@ class ProcessPdfs:
         self.print_running_time(start_time)
         
         start_time = time.time()
-        text_tables_as_yaml = self.pipeline.text_tables_to_yaml_llm(text_data, "gpt-4", False, False)
+        text_tables_as_yaml = self.pipeline.text_tables_to_yaml_llm(text_data, "gpt-3.5-turbo", False, False)
         # print(text_tables_as_yaml)
         self.pipeline.save_response_as_yaml(
             text_tables_as_yaml, output_path, f"{file_name}_whole_text"
@@ -104,7 +104,7 @@ class ProcessPdfs:
 
 
 def main():
-    model_identifier = "gpt-4-turbo-preview"
+    model_identifier = "gpt-3.5-turbo"
     pdf_folder = "test"
     process_pdfs = ProcessPdfs(model_identifier, pdf_folder)
     process_pdfs.run()
