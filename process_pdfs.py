@@ -97,7 +97,7 @@ class ProcessPdfs:
 
 
 def main():
-    model_identifier = "gpt-4-0125-preview"
+    model_identifier = "gpt-4-turbo-preview"
     pdf_folder = "test"
     process_pdfs = ProcessPdfs(model_identifier, pdf_folder)
     process_pdfs.run()
