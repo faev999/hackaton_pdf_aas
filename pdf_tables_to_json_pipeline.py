@@ -105,7 +105,7 @@ class PdfToJsonPipeline:
             raise IOError(f"Failed to read HTML file at {html_file_path}: {e}")
 
         soup = BeautifulSoup(html_content, "html.parser")
-        
+        body = soup.body
         page_divs = soup.find_all("div", attrs={"data-page-no": True})
         head = soup.head
         for element in head.find_all():
@@ -116,7 +116,7 @@ class PdfToJsonPipeline:
                 element.decompose()
         cleaned_html_body = ""
         divs_as_strings = []
-        for div in page_divs:
+        for div in body:
             cleaned_div = self._remove_images_and_empty_divs(div)
             div_as_str = str(cleaned_div)
             divs_as_strings.append(div_as_str)
