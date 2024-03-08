@@ -172,7 +172,7 @@ class PdfToJsonPipeline:
         response_stream = client.chat.completions.create(
             model=self.model_identifier,
             response_format={"type": "json_object"},
-            stream=True,
+            stream=False,
             temperature=0.0,
             messages=[
                 {
@@ -183,12 +183,13 @@ class PdfToJsonPipeline:
             ],
         )
 
-        complete_response = ""
-        for chunk in response_stream:
-            if chunk.choices[0].delta.content is not None:
-                print(chunk.choices[0].delta.content, end="")
-                complete_response += chunk.choices[0].delta.content
-        return complete_response
+        # complete_response = ""
+        # for chunk in response_stream:
+        #     if chunk.choices[0].delta.content is not None:
+        #         print(chunk.choices[0].delta.content, end="")
+        #         complete_response += chunk.choices[0].delta.content
+        # return complete_response
+        return response_stream.choices[0].message.content
     
     def html_to_text(self, html_data) -> str:
         """
@@ -241,7 +242,7 @@ class PdfToJsonPipeline:
         response_stream = client.chat.completions.create(
             model=self.model_identifier,
             response_format={"type": "json_object"},
-            stream=True,
+            stream=False,
             temperature=0.0,
             messages=[
                 {
@@ -252,12 +253,13 @@ class PdfToJsonPipeline:
             ],
         )
 
-        complete_response = ""
-        for chunk in response_stream:
-            if chunk.choices[0].delta.content is not None:
-                print(chunk.choices[0].delta.content, end="")
-                complete_response += chunk.choices[0].delta.content
-        return complete_response
+        # complete_response = ""
+        # for chunk in response_stream:
+        #     if chunk.choices[0].delta.content is not None:
+        #         print(chunk.choices[0].delta.content, end="")
+        #         complete_response += chunk.choices[0].delta.content
+        # return complete_response
+        return response_stream.choices[0].message.content
 
     def html_tables_to_yaml_llm(self, query: str) -> str:
         """
@@ -291,7 +293,7 @@ class PdfToJsonPipeline:
         print("Sending request...")
         response_stream = client.chat.completions.create(
             model=self.model_identifier,
-            stream=True,
+            stream=False,
             temperature=0.0,
             messages=[
                 {
@@ -302,13 +304,13 @@ class PdfToJsonPipeline:
             ],
         )
 
-        complete_response = ""
-        for chunk in response_stream:
-            if chunk.choices[0].delta.content is not None:
-                print(chunk.choices[0].delta.content, end="")
-                complete_response += chunk.choices[0].delta.content
-        return complete_response
-        # return response_stream.choices[0].message.content
+        # complete_response = ""
+        # for chunk in response_stream:
+        #     if chunk.choices[0].delta.content is not None:
+        #         print(chunk.choices[0].delta.content, end="")
+        #         complete_response += chunk.choices[0].delta.content
+        # return complete_response
+        return response_stream.choices[0].message.content
 
     
     def text_tables_to_yaml_llm(self, query: str) -> str:
@@ -343,7 +345,7 @@ class PdfToJsonPipeline:
         print("Sending request...")
         response_stream = client.chat.completions.create(
             model=self.model_identifier,
-            stream=True,
+            stream=False,
             temperature=0.0,
             messages=[
                 {
@@ -354,14 +356,14 @@ class PdfToJsonPipeline:
             ],
         )
 
-        complete_response = ""
-        for chunk in response_stream:
-            if chunk.choices[0].delta.content is not None:
-                print(chunk.choices[0].delta.content, end="")
-                complete_response += chunk.choices[0].delta.content
-        return complete_response
+        # complete_response = ""
+        # for chunk in response_stream:
+        #     if chunk.choices[0].delta.content is not None:
+        #         print(chunk.choices[0].delta.content, end="")
+        #         complete_response += chunk.choices[0].delta.content
+        # return complete_response
         
-        # return response_stream.choices[0].message.content
+        return response_stream.choices[0].message.content
 
     
     def save_response_as_json(
