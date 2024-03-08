@@ -139,7 +139,7 @@ class PdfToJsonPipeline:
             elif "class" in div.attrs:
                 del div.attrs["class"]
 
-    def html_tables_to_json_llm(self, query: str) -> str:
+    def html_tables_to_json_llm(self, query: str, model:str, streaming:bool, json_mode:bool) -> str:
         """
         Executes an inference query using a specified language model, optionally via a local server.
 
@@ -154,42 +154,10 @@ class PdfToJsonPipeline:
         Raises:
         - ValueError: If `api_endpoint` is required but not provided.
         """
-        if self.model_identifier == "local-model" and self.api_endpoint is None:
-            raise ValueError("API endpoint must be provided when using a local model.")
-
-        client = OpenAI(
-            base_url=f"http://{self.api_endpoint}/v1" if self.api_endpoint else None
-        )
-
-        print(
-            f"Model client for {self.model_identifier} created. Preparing to send query..."
-        )
-
-        token_count = self.calculate_token_count(query)
-        print(f"Number of tokens to send: {token_count}")
-
-        print("Sending request...")
-        response_stream = client.chat.completions.create(
-            model=self.model_identifier,
-            response_format={"type": "json_object"},
-            stream=False,
-            temperature=0.0,
-            messages=[
-                {
-                    "role": "system",
-                    "content": "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into the HTML code that's inside triple backticks. Please turn that code into several JSON objects that represent the original tables. Only return the json objects, no additional commentary or content.",
-                },
-                {"role": "user", "content": "```\n" + query + "```"},
-            ],
-        )
-
-        # complete_response = ""
-        # for chunk in response_stream:
-        #     if chunk.choices[0].delta.content is not None:
-        #         print(chunk.choices[0].delta.content, end="")
-        #         complete_response += chunk.choices[0].delta.content
-        # return complete_response
-        return response_stream.choices[0].message.content
+        
+        prompt = "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into the HTML code that's inside triple backticks. Please turn that code into several JSON objects that represent the original tables. Only return the json objects, no additional commentary or content."
+        response = self.run_inference(query, model, streaming, prompt, json_mode)
+        return response
     
     def html_to_text(self, html_data) -> str:
         """
@@ -209,7 +177,7 @@ class PdfToJsonPipeline:
         text_data = h.handle(html_data)
         return text_data
     
-    def text_tables_to_json_llm(self, query: str) -> str:
+    def text_tables_to_json_llm(self, query: str, model:str, streaming:bool, json_mode:bool) -> str:
         """
         Executes an inference query using a specified language model, optionally via a local server.
 
@@ -224,44 +192,12 @@ class PdfToJsonPipeline:
         Raises:
         - ValueError: If `api_endpoint` is required but not provided.
         """
-        if self.model_identifier == "local-model" and self.api_endpoint is None:
-            raise ValueError("API endpoint must be provided when using a local model.")
+       
+        prompt = "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into HTML code and then into the text that's inside triple backticks. Please turn that text into several JSON objects that represent the original tables. Only return the json objects, no additional commentary or content."
+        response = self.run_inference(query, model, streaming, prompt, json_mode)
+        return response
 
-        client = OpenAI(
-            base_url=f"http://{self.api_endpoint}/v1" if self.api_endpoint else None
-        )
-
-        print(
-            f"Model client for {self.model_identifier} created. Preparing to send query..."
-        )
-
-        token_count = self.calculate_token_count(query)
-        print(f"Number of tokens to send: {token_count}")
-
-        print("Sending request...")
-        response_stream = client.chat.completions.create(
-            model=self.model_identifier,
-            response_format={"type": "json_object"},
-            stream=False,
-            temperature=0.0,
-            messages=[
-                {
-                    "role": "system",
-                    "content": "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into HTML code and then into the text that's inside triple backticks. Please turn that text into several JSON objects that represent the original tables. Only return the json objects, no additional commentary or content.",
-                },
-                {"role": "user", "content": "```\n" + query + "```"},
-            ],
-        )
-
-        # complete_response = ""
-        # for chunk in response_stream:
-        #     if chunk.choices[0].delta.content is not None:
-        #         print(chunk.choices[0].delta.content, end="")
-        #         complete_response += chunk.choices[0].delta.content
-        # return complete_response
-        return response_stream.choices[0].message.content
-
-    def html_tables_to_yaml_llm(self, query: str) -> str:
+    def html_tables_to_yaml_llm(self, query: str, model:str, streaming:bool, json_mode:bool) -> str:
         """
         Executes an inference query using a specified language model, optionally via a local server.
 
@@ -276,44 +212,13 @@ class PdfToJsonPipeline:
         Raises:
         - ValueError: If `api_endpoint` is required but not provided.
         """
-        if self.model_identifier == "local-model" and self.api_endpoint is None:
-            raise ValueError("API endpoint must be provided when using a local model.")
-
-        client = OpenAI(
-            base_url=f"http://{self.api_endpoint}/v1" if self.api_endpoint else None
-        )
-
-        print(
-            f"Model client for {self.model_identifier} created. Preparing to send query..."
-        )
-
-        token_count = self.calculate_token_count(query)
-        print(f"Number of tokens to send: {token_count}")
-
-        print("Sending request...")
-        response_stream = client.chat.completions.create(
-            model="gpt-4",
-            stream=False,
-            temperature=0.0,
-            messages=[
-                {
-                    "role": "system",
-                    "content": "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into the HTML code that's inside triple backticks. Please turn that code into several valid YAML structures that represent the original tables. Make yure the YAML structures are valid with no invalid chracters inside the values or the keys. Only return the YAML structures, no additional commentary or content.",
-                },
-                {"role": "user", "content": "```\n" + query + "```"},
-            ],
-        )
-
-        # complete_response = ""
-        # for chunk in response_stream:
-        #     if chunk.choices[0].delta.content is not None:
-        #         print(chunk.choices[0].delta.content, end="")
-        #         complete_response += chunk.choices[0].delta.content
-        # return complete_response
-        return response_stream.choices[0].message.content
+       
+        prompt = "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into the HTML code that's inside triple backticks. Please turn that code into several valid YAML structures that represent the original tables. Make yure the YAML structures are valid with no invalid chracters inside the values or the keys. Only return the YAML structures, no additional commentary or content."
+        response = self.run_inference(query, model, streaming, prompt, json_mode)
+        return response
 
     
-    def text_tables_to_yaml_llm(self, query: str) -> str:
+    def text_tables_to_yaml_llm(self, query: str, model:str, streaming:bool, json_mode:bool) -> str:
         """
         Executes an inference query using a specified language model, optionally via a local server.
 
@@ -328,7 +233,27 @@ class PdfToJsonPipeline:
         Raises:
         - ValueError: If `api_endpoint` is required but not provided.
         """
-        if self.model_identifier == "local-model" and self.api_endpoint is None:
+        
+        prompt = "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into HTML code and then into the text that's inside triple backticks. Please turn that text into several valid YAML structures that represent the original tables. Make yure the YAML structures are valid with no invalid chracters inside the values or the keys. Only return the YAML structures, no additional commentary or content."
+        response = self.run_inference(query, model, streaming, prompt, json_mode)
+        return response
+    
+    def run_inference(self, query: str, model:str, streaming:bool, prompt:str, json_mode:bool) -> str:
+        """
+        Executes an inference query using a specified language model, optionally via a local server.
+
+        Parameters:
+        - query (str): The query to send to the model.
+        - model_identifier (str): The identifier of the model to use for the inference.
+        - api_endpoint (Optional[str]): The base URL for the API, if using a local model server. Defaults to None.
+
+        Returns:
+        - str: The complete response from the model.
+
+        Raises:
+        - ValueError: If `api_endpoint` is required but not provided.
+        """
+        if model == "local-model" and self.api_endpoint is None:
             raise ValueError("API endpoint must be provided when using a local model.")
 
         client = OpenAI(
@@ -336,34 +261,48 @@ class PdfToJsonPipeline:
         )
 
         print(
-            f"Model client for {self.model_identifier} created. Preparing to send query..."
+            f"Model client for {model} created. Preparing to send query..."
         )
 
         token_count = self.calculate_token_count(query)
         print(f"Number of tokens to send: {token_count}")
 
         print("Sending request...")
+        soup = BeautifulSoup(query, 'html.parser')
+        prettified_html = soup.prettify()
+        if json_mode :
+           
+            format_type = {"type": "json_object"}
+            if  model == "gpt-4":
+                print("gpt-4 doesnt support json.Using gpt-4-turbo-preview instead")
+                model = "gpt-4-turbo-preview"
+        
+        if not json_mode:
+            # TODO is text the correct type for "normal" inference?
+            format_type = {"type": "text"}
         response_stream = client.chat.completions.create(
-            model="gpt-4",
-            stream=False,
+            model=model,
+            stream=streaming,
             temperature=0.0,
+            response_format=format_type,
             messages=[
                 {
                     "role": "system",
-                    "content": "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into HTML code and then into the text that's inside triple backticks. Please turn that text into several valid YAML structures that represent the original tables. Make yure the YAML structures are valid with no invalid chracters inside the values or the keys. Only return the YAML structures, no additional commentary or content.",
+                    "content": prompt,
                 },
-                {"role": "user", "content": "```\n" + query + "```"},
+                {"role": "user", "content": "```\n" + prettified_html + "```"},
             ],
         )
-
-        # complete_response = ""
-        # for chunk in response_stream:
-        #     if chunk.choices[0].delta.content is not None:
-        #         print(chunk.choices[0].delta.content, end="")
-        #         complete_response += chunk.choices[0].delta.content
-        # return complete_response
-        
-        return response_stream.choices[0].message.content
+        if streaming:
+            complete_response = ""
+            for chunk in response_stream:
+                if chunk.choices[0].delta.content is not None:
+                    print(chunk.choices[0].delta.content, end="")
+                    complete_response += chunk.choices[0].delta.content
+            return complete_response
+        else:
+            # print(response_stream.choices[0].message.content)
+            return response_stream.choices[0].message.content
 
     
     def save_response_as_json(
@@ -416,7 +355,7 @@ class PdfToJsonPipeline:
         - ValueError: If the response string is not valid YAML.
         - IOError: If there is an issue writing the file.
         """
-        print(response)
+        # print(response)
         cleaned_response = response.strip(
             "```yaml"
         )
