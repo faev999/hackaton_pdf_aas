@@ -134,10 +134,13 @@ class PdfToJsonPipeline:
         for img in div_element.find_all("img"):
             img.decompose()
         for div in div_element.find_all("div"):
+           
+            if "class" in div.attrs:
+                del div.attrs["class"]
             if not div.find_all(string=lambda text: isinstance(text, NavigableString)):
                 div.decompose()
-            elif "class" in div.attrs:
-                del div.attrs["class"]
+            if not div.text.strip():
+                div.decompose()
         for span in div_element.find_all("span"):
             if not span.text.strip():
                 span.decompose()
