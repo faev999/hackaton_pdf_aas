@@ -110,8 +110,8 @@ class PdfToJsonPipeline:
         cleaned_html = ""
         divs_as_strings = []
         for div in page_divs:
-            self._remove_images_and_empty_divs(div)
-            div_as_str = str(div)
+            cleaned_div = self._remove_images_and_empty_divs(div)
+            div_as_str = str(cleaned_div)
             divs_as_strings.append(div_as_str)
             cleaned_html += div_as_str
 
@@ -138,6 +138,10 @@ class PdfToJsonPipeline:
                 div.decompose()
             elif "class" in div.attrs:
                 del div.attrs["class"]
+        for span in div_element.find_all("span"):
+            if not span.text.strip():
+                span.decompose()
+        return div_element
 
     def html_tables_to_json_llm(self, query: str, model:str, streaming:bool, json_mode:bool) -> str:
         """
