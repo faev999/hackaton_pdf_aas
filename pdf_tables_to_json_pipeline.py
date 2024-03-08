@@ -360,13 +360,11 @@ class PdfToJsonPipeline:
         - IOError: If there is an issue writing the file.
         """
         # print(response)
-        cleaned_response = response.strip(
-            "```yaml"
-        )
-        
-        cleaned_response = cleaned_response.strip(
-            "```"
-        )  
+        cleaned_response = response.replace("```yaml", "")
+        cleaned_response = cleaned_response.replace("```", "")
+        print(cleaned_response) 
+        cleaned_response = cleaned_response.replace("[", "\"")
+        cleaned_response = cleaned_response.replace("]", "\"")
         # cleaned_response = cleaned_response.replace("\"", "")
     
         try:
@@ -396,13 +394,8 @@ class PdfToJsonPipeline:
         Raises:
         - ValueError: If the given YAML string is not valid.
         """
-        cleaned_response = yaml_data.strip(
-            "```yaml"
-        )
-        
-        cleaned_response = cleaned_response.strip(
-            "```"
-        )  
+        cleaned_response = yaml_data.replace("```yaml", "")
+        cleaned_response = cleaned_response.replace("```", "")
         try:
             parsed_yaml = yaml.load(cleaned_response, Loader=yaml.UnsafeLoader)
         except yaml.YAMLError as e:
