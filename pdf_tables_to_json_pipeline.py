@@ -292,7 +292,7 @@ class PdfToJsonPipeline:
 
         print("Sending request...")
         response_stream = client.chat.completions.create(
-            model=self.model_identifier,
+            model="gpt-4",
             stream=False,
             temperature=0.0,
             messages=[
@@ -344,7 +344,7 @@ class PdfToJsonPipeline:
 
         print("Sending request...")
         response_stream = client.chat.completions.create(
-            model=self.model_identifier,
+            model="gpt-4",
             stream=False,
             temperature=0.0,
             messages=[
@@ -416,6 +416,7 @@ class PdfToJsonPipeline:
         - ValueError: If the response string is not valid YAML.
         - IOError: If there is an issue writing the file.
         """
+        print(response)
         cleaned_response = response.strip(
             "```yaml"
         )
