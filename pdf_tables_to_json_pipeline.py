@@ -362,7 +362,9 @@ class PdfToJsonPipeline:
         # print(response)
         cleaned_response = response.replace("```yaml", "")
         cleaned_response = cleaned_response.replace("```", "")
-        print(cleaned_response) 
+        print(cleaned_response)
+        
+        # TODO is this the correct way to clean brakets? 
         cleaned_response = cleaned_response.replace("[", "\"")
         cleaned_response = cleaned_response.replace("]", "\"")
         # cleaned_response = cleaned_response.replace("\"", "")
