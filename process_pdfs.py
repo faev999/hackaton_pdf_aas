@@ -32,7 +32,7 @@ class ProcessPdfs:
         
         start_time = time.time()
         # Execute model inference and save the result as JSON
-        html_tables_as_json = self.pipeline.html_tables_to_json_llm(cleaned_html, "gpt-3.5-turbo", False, True)
+        html_tables_as_json = self.pipeline.html_tables_to_json_llm(cleaned_html, self.model_identifier, False, True)
         # print(html_tables_as_json)
         self.pipeline.save_response_as_json(
         html_tables_as_json, output_path, f"{file_name}_whole"
@@ -40,7 +40,7 @@ class ProcessPdfs:
         self.print_running_time(start_time)
         
         start_time = time.time()
-        text_tables_as_json = self.pipeline.text_tables_to_json_llm(text_data,"gpt-3.5-turbo", False, True)
+        text_tables_as_json = self.pipeline.text_tables_to_json_llm(text_data,self.model_identifier, False, True)
         # print(text_tables_as_json)
         self.pipeline.save_response_as_json(
             text_tables_as_json, output_path, f"{file_name}_whole_text"
@@ -48,7 +48,7 @@ class ProcessPdfs:
         self.print_running_time(start_time)
         
         start_time = time.time()
-        html_tables_as_yaml = self.pipeline.html_tables_to_yaml_llm(cleaned_html,"gpt-3.5-turbo", False, False)
+        html_tables_as_yaml = self.pipeline.html_tables_to_yaml_llm(cleaned_html,self.model_identifier, False, False)
         # print(html_tables_as_yaml)
         self.pipeline.save_response_as_yaml(
             html_tables_as_yaml, output_path, f"{file_name}_whole"
@@ -59,7 +59,7 @@ class ProcessPdfs:
         self.print_running_time(start_time)
         
         start_time = time.time()
-        text_tables_as_yaml = self.pipeline.text_tables_to_yaml_llm(text_data, "gpt-3.5-turbo", False, False)
+        text_tables_as_yaml = self.pipeline.text_tables_to_yaml_llm(text_data, self.model_identifier, False, False)
         # print(text_tables_as_yaml)
         self.pipeline.save_response_as_yaml(
             text_tables_as_yaml, output_path, f"{file_name}_whole_text"
