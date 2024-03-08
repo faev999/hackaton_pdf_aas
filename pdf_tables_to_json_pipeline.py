@@ -383,7 +383,7 @@ class PdfToJsonPipeline:
         except IOError as e:
             raise IOError(f"Error writing YAML to file {output_file_path}: {e}")
         
-    def yaml_to_json(self, yaml_data: str) -> str:
+    def yaml_to_json(self, yaml_data: str,output_directory: str, output_file_name: str) -> str:
         """
         Converts a YAML string to a JSON string.
 
@@ -400,8 +400,14 @@ class PdfToJsonPipeline:
             parsed_yaml = yaml.load(yaml_data, Loader=yaml.UnsafeLoader)
         except yaml.YAMLError as e:
             raise ValueError(f"Failed to decode YAML data: {e}")
-
-        return json.dumps(parsed_yaml, indent=4)
+        json_data = json.dumps(parsed_yaml, indent=4)
+        output_file_path = f"{output_directory}/{output_file_name}.json"
+        try:
+            with open(output_file_path, "w") as file:
+                file.write(json_data)
+        except IOError as e:
+            raise IOError(f"Error writing JSON to file {output_file_path}: {e}")
+        return json_data
     
     def save_response_as_txt(
         self, response: str, output_directory: str, output_file_name: str
