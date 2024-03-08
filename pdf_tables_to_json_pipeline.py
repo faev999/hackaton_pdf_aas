@@ -105,24 +105,33 @@ class PdfToJsonPipeline:
             raise IOError(f"Failed to read HTML file at {html_file_path}: {e}")
 
         soup = BeautifulSoup(html_content, "html.parser")
+        
         page_divs = soup.find_all("div", attrs={"data-page-no": True})
-
-        cleaned_html = ""
+        head = soup.head
+        for element in head.find_all():
+            if element.name != "style":
+                element.decompose()
+        for element in head.find_all():
+            if element.name == "font-face" or 'font-family' in str(element):
+                element.decompose()
+        cleaned_html_body = ""
         divs_as_strings = []
         for div in page_divs:
             cleaned_div = self._remove_images_and_empty_divs(div)
             div_as_str = str(cleaned_div)
             divs_as_strings.append(div_as_str)
-            cleaned_html += div_as_str
+            cleaned_html_body += div_as_str
 
+        cleaned_html_head = str(head)
+        cleaned_html_content = cleaned_html_head + cleaned_html_body
         processed_html_path = html_file_path.replace(".html", "_processed.html")
         try:
             with open(processed_html_path, "w") as file:
-                file.write(cleaned_html + "\n")
+                file.write(cleaned_html_content + "\n")
         except IOError as e:
             raise IOError(f"Failed to write cleaned HTML to {processed_html_path}: {e}")
 
-        return cleaned_html, divs_as_strings
+        return cleaned_html_content, divs_as_strings
 
     def _remove_images_and_empty_divs(self, div_element) -> None:
         """
