@@ -159,7 +159,7 @@ class PdfToJsonPipeline:
         - ValueError: If `api_endpoint` is required but not provided.
         """
         
-        prompt = "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into the HTML code that's inside triple backticks. Please turn that code into several JSON objects that represent the original tables. Only return the json objects, no additional commentary or content."
+        prompt = "Good morning, you are a helpful assistant and an expert web developer. Some  in a pdf file were converted into the HTML code that's inside triple backticks. Please turn that code into several JSON structures that represent the original tables. Try to recognize and exclude headers and footers from the structures. Only return the JSON structures, no additional commentary or content."
         response = self.run_inference(query, model, streaming, prompt, json_mode)
         return response
     
@@ -197,7 +197,7 @@ class PdfToJsonPipeline:
         - ValueError: If `api_endpoint` is required but not provided.
         """
        
-        prompt = "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into HTML code and then into the text that's inside triple backticks. Please turn that text into several JSON objects that represent the original tables. Only return the json objects, no additional commentary or content."
+        prompt = "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into HTML code and then into the text that's inside triple backticks. Please turn that text into several JSON structures that represent the original tables.Try to recognize and exclude headers and footers from the structures. Only return the JSON structures, no additional commentary or content."
         response = self.run_inference(query, model, streaming, prompt, json_mode)
         return response
 
@@ -217,7 +217,7 @@ class PdfToJsonPipeline:
         - ValueError: If `api_endpoint` is required but not provided.
         """
        
-        prompt = "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into the HTML code that's inside triple backticks. Please turn that code into several valid YAML structures that represent the original tables. Make yure the YAML structures are valid with no invalid chracters inside the values or the keys. Only return the YAML structures, no additional commentary or content."
+        prompt = "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into the HTML code that's inside triple backticks. Please turn that code into several valid YAML structures that represent the original tables. Make yure the YAML structures are valid with no invalid chracters inside the values or the keys. Try to recognize and exclude headers and footers from the structures. Only return the YAML structures, no additional commentary or content."
         response = self.run_inference(query, model, streaming, prompt, json_mode)
         return response
 
@@ -238,7 +238,7 @@ class PdfToJsonPipeline:
         - ValueError: If `api_endpoint` is required but not provided.
         """
         
-        prompt = "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into HTML code and then into the text that's inside triple backticks. Please turn that text into several valid YAML structures that represent the original tables. Make yure the YAML structures are valid with no invalid chracters inside the values or the keys. Only return the YAML structures, no additional commentary or content."
+        prompt = "Good morning, you are a helpful assistant and an expert web developer. Some tables were converted into HTML code and then into the text that's inside triple backticks. Please turn that text into several valid YAML structures that represent the original tables. Make yure the YAML structures are valid with no invalid chracters inside the values or the keys. Try to recognize and exclude headers and footers from the structures. Only return the YAML structures, no additional commentary or content."
         response = self.run_inference(query, model, streaming, prompt, json_mode)
         return response
     
