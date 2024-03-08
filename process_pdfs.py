@@ -53,6 +53,9 @@ class ProcessPdfs:
         self.pipeline.save_response_as_yaml(
             html_tables_as_yaml, output_path, f"{file_name}_whole"
         )
+        self.pipeline.yaml_to_json(html_tables_as_yaml,
+            output_path, f"{file_name}_whole_from_yaml"
+        )
         self.print_running_time(start_time)
         
         start_time = time.time()
@@ -60,6 +63,9 @@ class ProcessPdfs:
         # print(text_tables_as_yaml)
         self.pipeline.save_response_as_yaml(
             text_tables_as_yaml, output_path, f"{file_name}_whole_text"
+        )
+        self.pipeline.yaml_to_json(text_tables_as_yaml,
+            output_path, f"{file_name}_whole_text_from_yaml"
         )
         self.print_running_time(start_time)
         
