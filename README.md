@@ -6,5 +6,5 @@
   * `sudo apt install "./pdf2htmlEX-0.18.8.rc1-master-20200630-Ubuntu-bionic-x86_64.deb" -y`
 * Install pip requirements.
 * Get an OpenAI API key and export it into your env.
-* Run with:`python pdf_tables_to_json_pipeline.py`
+* Run with:`python process_pdfs.py`
   
